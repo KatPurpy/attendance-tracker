@@ -45,7 +45,9 @@ namespace AttendanceTracker.Controllers
 
             var apiPrimaryKeyValues = apiPrimaryKeyProperties.Values.Select(prop => prop.GetValue(value)).ToArray();
 
-            var entry = await DbCtx.FindAsync<DbType>(apiPrimaryKeyValues);
+            // Since we use guids at this point
+             var entry = await DbCtx.FindAsync<DbType>(apiPrimaryKeyValues);
+
 
             if (entry == null)
             {

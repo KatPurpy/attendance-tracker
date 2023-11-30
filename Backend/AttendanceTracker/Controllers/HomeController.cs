@@ -8,8 +8,11 @@ namespace AttendanceTracker.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly DbCtx dbCtx;
+
+        public HomeController(DbCtx dbCtx, ILogger<HomeController> logger)
         {
+            this.dbCtx = dbCtx;
             _logger = logger;
         }
 
@@ -21,6 +24,11 @@ namespace AttendanceTracker.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public IActionResult ListGroup()
+        {
+            return View(dbCtx.Groups);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

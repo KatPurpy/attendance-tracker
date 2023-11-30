@@ -1,11 +1,11 @@
 ﻿using AttendanceTracker.Models.API;
 using AttendanceTracker.Models.DB;
 
-namespace AttendanceTracker.Controllers
+namespace AttendanceTracker.Controllers.ApiControllers
 {
     public class StudentController : BaseObjectListController<int, Student, APIStudent>
     {
-        public StudentController(DbCtx context) : base(context, "Id")
+        public StudentController(DbCtx context) : base(context, "Guid")
         {
 
         }

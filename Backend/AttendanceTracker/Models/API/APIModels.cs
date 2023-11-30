@@ -12,15 +12,15 @@ namespace AttendanceTracker.Models.API
         }
     }
 
-    public class APIStudent : IAPIModelFor<APIStudent, DB.Student>
+    public class APIStudent : IAPIModelFor<APIStudent, DB.Student>, IGuid
     {
-        public int Id { get; set; }
+        public Guid Guid { get; set; }
         public string Name { get; set; }
         public string GroupName { get; set; }
 
         public APIStudent ConvertToAPI(DB.Student entity)
         {
-            Id = entity.Id;
+            Guid = entity.Guid;
             Name = entity.Name;
             GroupName = entity.GroupName;
             return this;

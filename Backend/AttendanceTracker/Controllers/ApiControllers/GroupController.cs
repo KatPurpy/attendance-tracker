@@ -1,7 +1,6 @@
-﻿using AttendanceTracker;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace AttendanceTracker.Controllers
+namespace AttendanceTracker.Controllers.ApiControllers
 {
     public class GroupController : BaseObjectListController<string, Models.DB.Group, Models.API.APIGroup>
     {
