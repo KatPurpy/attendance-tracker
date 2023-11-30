@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AttendanceTracker.Migrations
 {
     [DbContext(typeof(DbCtx))]
-    [Migration("20231129193846_test")]
+    [Migration("20231130135647_test")]
     partial class test
     {
         /// <inheritdoc />
@@ -41,14 +41,10 @@ namespace AttendanceTracker.Migrations
 
             modelBuilder.Entity("AttendanceTracker.Models.Group", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("Name");
 
                     b.ToTable("Groups");
                 });
@@ -59,7 +55,7 @@ namespace AttendanceTracker.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("GroupId")
+                    b.Property<string>("GroupName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -69,7 +65,7 @@ namespace AttendanceTracker.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
+                    b.HasIndex("GroupName");
 
                     b.ToTable("Students");
                 });
@@ -89,7 +85,7 @@ namespace AttendanceTracker.Migrations
                 {
                     b.HasOne("AttendanceTracker.Models.Group", "Group")
                         .WithMany("Students")
-                        .HasForeignKey("GroupId")
+                        .HasForeignKey("GroupName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

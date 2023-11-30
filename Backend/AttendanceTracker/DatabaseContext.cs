@@ -1,4 +1,4 @@
-﻿using AttendanceTracker.Models;
+﻿using AttendanceTracker.Models.DB;
 using Microsoft.EntityFrameworkCore;
 namespace AttendanceTracker
 {

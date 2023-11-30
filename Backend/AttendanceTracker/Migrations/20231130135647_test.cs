@@ -15,12 +15,11 @@ namespace AttendanceTracker.Migrations
                 name: "Groups",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Groups", x => x.Id);
+                    table.PrimaryKey("PK_Groups", x => x.Name);
                 });
 
             migrationBuilder.CreateTable(
@@ -30,16 +29,16 @@ namespace AttendanceTracker.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    GroupId = table.Column<string>(type: "TEXT", nullable: false)
+                    GroupName = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Students", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Students_Groups_GroupId",
-                        column: x => x.GroupId,
+                        name: "FK_Students_Groups_GroupName",
+                        column: x => x.GroupName,
                         principalTable: "Groups",
-                        principalColumn: "Id",
+                        principalColumn: "Name",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -69,9 +68,9 @@ namespace AttendanceTracker.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_GroupId",
+                name: "IX_Students_GroupName",
                 table: "Students",
-                column: "GroupId");
+                column: "GroupName");
         }
 
         /// <inheritdoc />
