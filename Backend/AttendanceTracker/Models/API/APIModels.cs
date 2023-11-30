@@ -1,10 +1,11 @@
 ﻿using AttendanceTracker.Models.DB;
+using System.Text.Json.Serialization;
 
 namespace AttendanceTracker.Models.API
 {
-    public class APIGroup : IAPIModelFor<APIGroup, DB.Group>
+    public class APIGroup : IAPIModelFor<APIGroup, DB.Group>, IStringNameDbKey
     {
-        public string Name { get; set; } 
+        public string Name{ get; set; }
         public APIGroup ConvertToAPI(DB.Group entity)
         {
             Name = entity.Name;
@@ -12,7 +13,7 @@ namespace AttendanceTracker.Models.API
         }
     }
 
-    public class APIStudent : IAPIModelFor<APIStudent, DB.Student>, IGuid
+    public class APIStudent : IAPIModelFor<APIStudent, DB.Student>, IGuidDbKey
     {
         public Guid Guid { get; set; }
         public string Name { get; set; }

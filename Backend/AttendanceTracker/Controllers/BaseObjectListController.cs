@@ -6,24 +6,21 @@ namespace AttendanceTracker.Controllers
 {
     [Route("api/[controller]")]
     public class BaseObjectListController<KeyType,DbType,ApiType> : Controller 
-        where DbType : class,new()
+        where DbType : class, new()
         where ApiType : class, IAPIModelFor<ApiType,DbType>
     {
         public DbCtx DbCtx { get; set; }
 
-        private string[] primaryKeys;
-
-        public BaseObjectListController(DbCtx dbCtx, params string[] primaryKeys)
+        public BaseObjectListController(DbCtx dbCtx)
         {
             DbCtx = dbCtx;
-            this.primaryKeys = primaryKeys;
         }
 
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult<ApiType>> Read(KeyType id)
         {
-            var obj = await DbCtx.FindAsync<DbType>(id);
+            var obj = await GetEntry(id);
             if (obj == null) return StatusCode((int)HttpStatusCode.NoContent);
             return Activator.CreateInstance<ApiType>().ConvertToAPI(obj);
         }
@@ -37,37 +34,60 @@ namespace AttendanceTracker.Controllers
         }
 
         [HttpPost]
-        [Route(nameof(Write))]
-        public async Task<IActionResult> Write(ApiType value)
+        [Route(nameof(Update))]
+        public async Task<IActionResult> Update(KeyType id, ApiType value)
         {
-            var apiPrimaryKeyProperties = primaryKeys.ToDictionary(name => name, name => typeof(ApiType).GetProperty(name));
-            var dbPrimaryKeyProperties = primaryKeys.ToDictionary(name => name, name => typeof(DbType).GetProperty(name));
+            DbType? entry = await GetEntry(id);
+            if (entry == null) return StatusCode((int)HttpStatusCode.NoContent);
 
-            var apiPrimaryKeyValues = apiPrimaryKeyProperties.Values.Select(prop => prop.GetValue(value)).ToArray();
-
-            // Since we use guids at this point
-             var entry = await DbCtx.FindAsync<DbType>(apiPrimaryKeyValues);
-
-
-            if (entry == null)
-            {
-                entry = new DbType();
-                
-                foreach(var primaryKey in primaryKeys)
-                {
-                    var entryProperty = dbPrimaryKeyProperties[primaryKey];
-                    var inputValue = apiPrimaryKeyProperties[primaryKey].GetValue(value);
-                    entryProperty.SetValue(entry, inputValue);
-                }
-
-                await DbCtx.AddAsync(entry);
-            }
-            
             DbCtx.Entry(entry).CurrentValues.SetValues(value);
             
             await DbCtx.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpPost]
+        [Route(nameof(Create))]
+        public async Task<ActionResult<ApiType>> Create(ApiType value)
+        {
+            var entry = await CreateEntry(value);
+            DbCtx.Entry(entry).CurrentValues.SetValues(value);
+            await DbCtx.SaveChangesAsync();
+            return value;
+        }
+
+        async Task<DbType> CreateEntry(ApiType value)
+        {
+            var entry = new DbType();
+            if(entry is IGuidDbKey entryWithGuid && value is IGuidDbKey valueWithGuid)
+            {
+                var newGuid = Guid.NewGuid();
+                valueWithGuid.Guid = newGuid;
+                entryWithGuid.Guid = newGuid;
+            }
+            else if(entry is IStringNameDbKey entryWithName && value is IStringNameDbKey name)
+            {
+                entryWithName.Name = name.Name;
+            }
+            else
+            {
+                throw new InvalidOperationException("Unknown key type. " + typeof(KeyType));
+            }
+            await DbCtx.AddAsync(entry);
+            return entry;
+        }
+
+        async Task<DbType?> GetEntry(KeyType id)
+        {
+            if(id is Guid guid)
+            {
+                return DbCtx.Set<DbType>().FirstOrDefault(s => ((IGuidDbKey)s).Guid == guid);
+            }
+            else 
+            {
+                return await DbCtx.FindAsync<DbType>(id);
+            }
         }
     }
 }
