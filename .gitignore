@@ -4,3 +4,5 @@
 
 *.bkp
 /Backend/AttendanceTracker/Database.db
+/Backend/AttendanceTracker/Database.db-shm
+/Backend/AttendanceTracker/Database.db-wal
