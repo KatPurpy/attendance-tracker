@@ -3,6 +3,7 @@ using System;
 using AttendanceTracker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AttendanceTracker.Migrations
 {
     [DbContext(typeof(DbCtx))]
-    partial class DbCtxModelSnapshot : ModelSnapshot
+    [Migration("20231130231453_student-guid")]
+    partial class studentguid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.14");
@@ -26,15 +29,13 @@ namespace AttendanceTracker.Migrations
                     b.Property<Guid>("Guid")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("StudentGuid")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("StudentId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Timestamp")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(16)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -47,7 +48,6 @@ namespace AttendanceTracker.Migrations
             modelBuilder.Entity("AttendanceTracker.Models.DB.Group", b =>
                 {
                     b.Property<string>("Name")
-                        .HasMaxLength(64)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Name");
@@ -63,7 +63,6 @@ namespace AttendanceTracker.Migrations
 
                     b.Property<string>("GroupName")
                         .IsRequired()
-                        .HasMaxLength(64)
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("Guid")
@@ -71,7 +70,6 @@ namespace AttendanceTracker.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

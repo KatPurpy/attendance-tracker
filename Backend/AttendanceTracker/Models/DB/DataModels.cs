@@ -11,7 +11,9 @@ namespace AttendanceTracker.Models.DB
         public int Id { get; set; }
         
         public Guid Guid { get; set; }
+        [MaxLength(128)]
         public string Name { get; set; }
+        [MaxLength(64)]
         public string GroupName { get; set; }
 
         public Group Group { get; set; } = null;
@@ -20,6 +22,7 @@ namespace AttendanceTracker.Models.DB
     public class Group : IStringNameDbKey
     {
         [Key]
+        [MaxLength(64)]
         public string Name { get; set; }
         public ICollection<Student> Students { get; set; } = new List<Student>();
     }
@@ -30,6 +33,8 @@ namespace AttendanceTracker.Models.DB
         public int Id { get; set; }
         public Guid Guid { get; set; }
         public DateTime Timestamp { get; set; }
+        [MaxLength(16)]
+        public string Value { get; set; }
         public int StudentId { get; set; }
         public Student Student { get; set; } = null;
     }

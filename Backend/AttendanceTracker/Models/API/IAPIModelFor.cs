@@ -2,6 +2,6 @@
 {
     public interface IAPIModelFor<T,DbType> where DbType:class
     {
-        public T ConvertToAPI(DbType entity);
+        public T ConvertToAPI(DbCtx databaseContext, DbType entity);
     }
 }
