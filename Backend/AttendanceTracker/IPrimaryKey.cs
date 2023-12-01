@@ -1,7 +1,7 @@
 ﻿namespace AttendanceTracker
 {
-    public interface IGuidDbKey
+    public interface IIntDbKey
     {
-        public Guid Guid { get; set; }
+        public int Id{ get; set; }
     }
 }

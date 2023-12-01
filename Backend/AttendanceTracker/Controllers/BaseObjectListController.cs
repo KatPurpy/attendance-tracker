@@ -72,41 +72,21 @@ namespace AttendanceTracker.Controllers
 
         private void CopyGuidToApiValue(DbType dbType, ApiType apiType)
         {
-            if (dbType is IGuidDbKey dbTypeWithGuid && apiType is IGuidDbKey dbKeyWithGuid)
+            if (dbType is IIntDbKey dbTypeWithGuid && apiType is IIntDbKey dbKeyWithGuid)
             {
-                dbKeyWithGuid.Guid = dbTypeWithGuid.Guid;
+                dbKeyWithGuid.Id = dbTypeWithGuid.Id;
             }
         }
         private async Task<DbType> CreateEntry(ApiType value)
         {
             var entry = new DbType();
-            if(entry is IGuidDbKey entryWithGuid && value is IGuidDbKey valueWithGuid)
-            {
-                var newGuid = Guid.NewGuid();
-                entryWithGuid.Guid = newGuid;
-                CopyGuidToApiValue(entry, value);
-            }
-            else
-            {
-                throw new InvalidOperationException("Unknown key type. " + typeof(KeyType));
-            }
             await DbCtx.AddAsync(entry);
             return entry;
         }
 
         private async Task<DbType?> GetEntry(KeyType id)
         {
-            if(id is Guid guid)
-            {
-                return DbCtx
-                    .Set<DbType>()
-                    .Select(s=>s as IGuidDbKey)
-                    .FirstOrDefault(s => s.Guid == guid) as DbType;
-            }
-            else 
-            {
-                return await DbCtx.FindAsync<DbType>(id);
-            }
+            return await DbCtx.FindAsync<DbType>(id);
         }
     }
 }

@@ -5,36 +5,33 @@ using System.Text.Json.Serialization;
 
 namespace AttendanceTracker.Models.DB
 {
-    public class Student : IGuidDbKey
+    public class Student : IIntDbKey
     {
         [Key]
         public int Id { get; set; }
-        public Guid Guid { get; set; }
 
         [MaxLength(128)]
         public string Name { get; set; }
         [MaxLength(64)]
-        public Guid GroupId { get; set; }
+        public Id GroupId { get; set; }
 
         public Group Group { get; set; } = null;
     }
 
-    public class Group : IGuidDbKey
+    public class Group : IIntDbKey
     {
         [Key]
         public int Id { get; set; }
-        public Guid Guid { get; set; }
 
         [MaxLength(64)]
         public string Name { get; set; }
         public ICollection<Student> Students { get; set; } = new List<Student>();
     }
 
-    public class DayEntry : IGuidDbKey
+    public class DayEntry : IIntDbKey
     {
         [Key]
         public int Id { get; set; }
-        public Guid Guid { get; set; }
 
         public DateTime Timestamp { get; set; }
         [MaxLength(16)]
