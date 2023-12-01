@@ -37,14 +37,14 @@ namespace AttendanceTracker.Models.API
         public DateTime Timestamp { get; set; }
         [MaxLength(16)]
         public string Value { get; set; }
-        public Guid StudentId { get; set; }
+        public int StudentId { get; set; }
 
         public APIDayEntry ConvertToAPI(DbCtx databaseContext, DayEntry entity)
         {
             Id = entity.Id;
             Timestamp = entity.Timestamp;
             Value = entity.Value;
-            StudentId = databaseContext.Set<Student>().First(ent => ent.Guid == entity.Guid).Guid;
+            StudentId = databaseContext.Set<Student>().First(ent => ent.Id == entity.Id).Id;
             return this;
         }
     }

@@ -13,7 +13,7 @@ namespace AttendanceTracker.Models.DB
         [MaxLength(128)]
         public string Name { get; set; }
         [MaxLength(64)]
-        public Id GroupId { get; set; }
+        public int GroupId { get; set; }
 
         public Group Group { get; set; } = null;
     }
