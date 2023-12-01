@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace AttendanceTracker.Models.API
 {
-    public class APIGroup : IAPIModelFor<APIGroup, DB.Group>, IStringNameDbKey
+    public class APIGroup : IAPIModelFor<APIGroup, DB.Group>
     {
         public string Name{ get; set; }
         public APIGroup ConvertToAPI(DbCtx databaseContext, DB.Group entity)
@@ -18,13 +18,13 @@ namespace AttendanceTracker.Models.API
     {
         public Guid Guid { get; set; }
         public string Name { get; set; }
-        public string GroupName { get; set; }
+        public Guid GroupId { get; set; }
 
         public APIStudent ConvertToAPI(DbCtx databaseContext, DB.Student entity)
         {
-            Guid = entity.Guid;
+            Guid = entity.Id;
             Name = entity.Name;
-            GroupName = entity.GroupName;
+            GroupId = entity.GroupId;
             return this;
         }
     }

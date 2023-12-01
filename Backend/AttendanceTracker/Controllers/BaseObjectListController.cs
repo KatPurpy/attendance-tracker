@@ -86,10 +86,6 @@ namespace AttendanceTracker.Controllers
                 entryWithGuid.Guid = newGuid;
                 CopyGuidToApiValue(entry, value);
             }
-            else if(entry is IStringNameDbKey entryWithName && value is IStringNameDbKey name)
-            {
-                entryWithName.Name = name.Name;
-            }
             else
             {
                 throw new InvalidOperationException("Unknown key type. " + typeof(KeyType));

@@ -4,9 +4,4 @@
     {
         public Guid Guid { get; set; }
     }
-
-    public interface IStringNameDbKey
-    {
-        public string Name { get; set; }
-    }
 }
