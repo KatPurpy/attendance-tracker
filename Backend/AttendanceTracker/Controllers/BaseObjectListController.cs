@@ -7,9 +7,9 @@ using System.Net;
 namespace AttendanceTracker.Controllers
 {
     [Route("api/[controller]")]
-    public class BaseObjectListController<KeyType,DbType,ApiType> : Controller 
-        where DbType : class, new()
-        where ApiType : class, IAPIModelFor<ApiType,DbType>
+    public class BaseObjectListController<DbType,ApiType> : Controller 
+        where DbType : class, IIntDbKey, new()
+        where ApiType : class, IIntDbKey, IAPIModelFor<ApiType,DbType>
     {
         public DbCtx DbCtx { get; set; }
 
@@ -20,7 +20,7 @@ namespace AttendanceTracker.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<ApiType>> Read(KeyType id)
+        public async Task<ActionResult<ApiType>> Read(int id)
         {
             var obj = await GetEntry(id);
             if (obj == null) return StatusCode((int)HttpStatusCode.NoContent);
@@ -37,7 +37,7 @@ namespace AttendanceTracker.Controllers
 
         [HttpPost]
         [Route(nameof(Delete))]
-        public async Task<ActionResult> Delete(KeyType id)
+        public async Task<ActionResult> Delete(int id)
         {
             var obj = await GetEntry(id);
             if (obj == null) return StatusCode((int)HttpStatusCode.NoContent);
@@ -48,16 +48,16 @@ namespace AttendanceTracker.Controllers
 
         [HttpPost]
         [Route(nameof(Update))]
-        public async Task<IActionResult> Update(KeyType id, [FromBody] ApiType value)
+        public async Task<ActionResult<ApiType>> Update(int id, [FromBody] ApiType value)
         {
             DbType? entry = await GetEntry(id);
             if (entry == null) return StatusCode((int)HttpStatusCode.NoContent);
-            CopyGuidToApiValue(entry, value);
+            value.Id = entry.Id;
             DbCtx.Entry(entry).CurrentValues.SetValues(value);
             
             await DbCtx.SaveChangesAsync();
 
-            return Ok();
+            return value;
         }
 
         [HttpPost]
@@ -65,18 +65,13 @@ namespace AttendanceTracker.Controllers
         public async Task<ActionResult<ApiType>> Create([FromBody] ApiType value)
         {
             var entry = await CreateEntry(value);
+            value.Id = default;
             DbCtx.Entry(entry).CurrentValues.SetValues(value);
             await DbCtx.SaveChangesAsync();
+            value.Id = entry.Id;
             return value;
         }
 
-        private void CopyGuidToApiValue(DbType dbType, ApiType apiType)
-        {
-            if (dbType is IIntDbKey dbTypeWithGuid && apiType is IIntDbKey dbKeyWithGuid)
-            {
-                dbKeyWithGuid.Id = dbTypeWithGuid.Id;
-            }
-        }
         private async Task<DbType> CreateEntry(ApiType value)
         {
             var entry = new DbType();
@@ -84,7 +79,7 @@ namespace AttendanceTracker.Controllers
             return entry;
         }
 
-        private async Task<DbType?> GetEntry(KeyType id)
+        private async Task<DbType?> GetEntry(int id)
         {
             return await DbCtx.FindAsync<DbType>(id);
         }

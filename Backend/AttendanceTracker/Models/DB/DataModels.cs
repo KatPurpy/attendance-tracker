@@ -8,6 +8,7 @@ namespace AttendanceTracker.Models.DB
     public class Student : IIntDbKey
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [MaxLength(128)]
@@ -21,6 +22,7 @@ namespace AttendanceTracker.Models.DB
     public class Group : IIntDbKey
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [MaxLength(64)]
@@ -31,12 +33,13 @@ namespace AttendanceTracker.Models.DB
     public class DayEntry : IIntDbKey
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public DateTime Timestamp { get; set; }
         [MaxLength(16)]
         public string Value { get; set; }
-        public Guid StudentId { get; set; }
+        public int StudentId { get; set; }
         public Student Student { get; set; } = null;
     }
 }

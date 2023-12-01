@@ -19,7 +19,7 @@ namespace AttendanceTracker
 
             builder.Services.AddDbContext<DbCtx>((options) =>
             {
-                options.UseSqlite("Data Source=Database.db");
+                options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL") );
             });
 
             var app = builder.Build();
