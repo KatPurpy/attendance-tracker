@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AttendanceTracker.Models.API;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AttendanceTracker.Controllers.ApiControllers
 {

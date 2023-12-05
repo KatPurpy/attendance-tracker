@@ -19,10 +19,10 @@ namespace AttendanceTracker.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route(nameof(Read))]
         public async Task<ActionResult<ApiType>> Read(int id)
         {
-            var obj = await GetEntry(id);
+            var obj = await GetEntry(DbCtx,id);
             if (obj == null) return StatusCode((int)HttpStatusCode.NoContent);
             return Activator.CreateInstance<ApiType>().ConvertToAPI(DbCtx, obj);
         }
@@ -39,7 +39,7 @@ namespace AttendanceTracker.Controllers
         [Route(nameof(Delete))]
         public async Task<ActionResult> Delete(int id)
         {
-            var obj = await GetEntry(id);
+            var obj = await GetEntry(DbCtx, id);
             if (obj == null) return StatusCode((int)HttpStatusCode.NoContent);
             DbCtx.Remove(obj);
             await DbCtx.SaveChangesAsync();
@@ -50,7 +50,7 @@ namespace AttendanceTracker.Controllers
         [Route(nameof(Update))]
         public async Task<ActionResult<ApiType>> Update(int id, [FromBody] ApiType value)
         {
-            DbType? entry = await GetEntry(id);
+            DbType? entry = await GetEntry(DbCtx, id);
             if (entry == null) return StatusCode((int)HttpStatusCode.NoContent);
             value.Id = entry.Id;
             DbCtx.Entry(entry).CurrentValues.SetValues(value);
@@ -64,7 +64,7 @@ namespace AttendanceTracker.Controllers
         [Route(nameof(Create))]
         public async Task<ActionResult<ApiType>> Create([FromBody] ApiType value)
         {
-            var entry = await CreateEntry(value);
+            var entry = await CreateEntry(DbCtx, value);
             value.Id = default;
             DbCtx.Entry(entry).CurrentValues.SetValues(value);
             await DbCtx.SaveChangesAsync();
@@ -72,16 +72,16 @@ namespace AttendanceTracker.Controllers
             return value;
         }
 
-        private async Task<DbType> CreateEntry(ApiType value)
+        public static async Task<DbType> CreateEntry(DbCtx dbCtx, ApiType value)
         {
             var entry = new DbType();
-            await DbCtx.AddAsync(entry);
+            await dbCtx.AddAsync(entry);
             return entry;
         }
 
-        private async Task<DbType?> GetEntry(int id)
+        public static async Task<DbType?> GetEntry(DbCtx dbCtx, int id)
         {
-            return await DbCtx.FindAsync<DbType>(id);
+            return await dbCtx.FindAsync<DbType>(id);
         }
     }
 }
