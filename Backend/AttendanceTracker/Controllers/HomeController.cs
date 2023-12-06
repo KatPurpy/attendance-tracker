@@ -28,7 +28,8 @@ namespace AttendanceTracker.Controllers
 
         public IActionResult ListGroup()
         {
-            return View(dbCtx.Groups);
+            ViewBag.DbCtx = dbCtx;
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
