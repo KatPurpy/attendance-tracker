@@ -1,68 +1,54 @@
 function convertFormToObject(form) {
-    const array = $(form).serializeArray(); // Encodes the set of form elements as an array of names and values.
-    const json = {};
-    $.each(array, function () {
-        if (this.value && this.value != "") {
-            json[this.name] = this.value;
+    let formData = new FormData(document.querySelector('#'+form));
+    let result = Object.fromEntries(formData);
+    for (let key in result)
+    {
+        if (!result[key] || result[key] == "") {
+            delete result[key];
         }
-    });
-    return json;
+    }
+    return result;
 }
 
-function CreateCrudObj(formName, type) {
+async function CreateCrudObj(formName, type) {
     let formData = convertFormToObject(formName);
     console.log(formData);
-    $.ajax({
-        type: "POST",
-        url: `/api/${type}/Create`,
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify(formData),
-        success: () => {
-            location.reload();
-        }
-    });
+
+    await fetch(`/api/${type}/Create`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData)
+    }).then(_ => location.reload());
 }
 
-function ChangeCrudObj(formName, type) {
+async function ChangeCrudObj(formName, type) {
     let formData = convertFormToObject(formName);
     console.log(formData);
-    $.ajax({
-        type: "POST",
-        url: `/api/${type}/Update?id=` + formData.Id,
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify(formData),
-        success: () => {
-            location.reload();
-        }
-    });
-}
-function LoadCrudObj(formname, type, id) {
-    $.ajax({
-        type: "GET",
-        url: `/api/${type}/Read`,
-        data: { id },
-        success: function (result) {
-            console.log(result);
-            for (let key in result) {
-                let query = formname + ` input[name="${key}" i]`;
-                console.log(query);
-                var form = $(query);
-                console.log(form);
-                form.val(result[key]);
-            }
-        }
 
-    });
+    await fetch(`/api/${type}/Update?` + new URLSearchParams({ id }), {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData)
+    }).then(_ => location.reload());
 }
-function DeleteCrudObj(type, id) {
-    $.ajax({
-        type: "POST",
-        url: `/api/${type}/Delete`,
-        data: { id },
-        success: function (result) {
-            location.reload();
-        }
-    });
+
+async function LoadCrudObj(formname, type, id)
+{
+    const request = await fetch(`/api/${type}/Read?` + new URLSearchParams({ id }));
+    result = await request.json();
+    for (const key in result) {
+        const qs = document.querySelector('#' + formname + ` input[name="${key}" i]`);
+        qs.value = result[key];
+    }
+}
+
+async function DeleteCrudObj(type, id) {
+    await fetch(`/api/${type}/Delete?` + new URLSearchParams({ id }) , {
+        method: "POST",
+    }).then(_ => location.reload());
+
 }

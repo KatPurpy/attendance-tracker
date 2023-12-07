@@ -28,7 +28,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					<button type="button" onclick="ChangeCrudObj('#inputForm_edit','Group')" class="btn btn-primary">Save changes</button>
+					<button type="button" onclick="ChangeCrudObj('inputForm_edit','Group')" class="btn btn-primary">Save changes</button>
 				</div>
 			</form>
 		</div>
@@ -52,7 +52,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="button" onclick="CreateCrudObj('#inputForm_create','Group')" type="submit" class="btn btn-primary">Save changes</button>
+				<button type="button" onclick="CreateCrudObj('inputForm_create','Group')" type="submit" class="btn btn-primary">Save changes</button>
 			</div>
 		</div>
 	</div>
@@ -80,7 +80,7 @@
 				</td>
 				<td class="border border-danger border-2">
 					<!-- Button trigger modal -->
-					<button type="button" onclick="LoadCrudObj('#inputForm_edit', 'Group', '@item.Id')" class="btn btn-primary" data-toggle="modal" data-target="#editGroupModal">
+					<button type="button" onclick="LoadCrudObj('inputForm_edit', 'Group', '@item.Id')" class="btn btn-primary" data-toggle="modal" data-target="#editGroupModal">
 						Edit
 					</button>
 					<a asp-action="Details" asp-route-id="@item.Name">Details</a> |
