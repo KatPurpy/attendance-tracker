@@ -20,7 +20,9 @@ async function CreateCrudObj(formName, type) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(formData)
-    }).then(_ => location.reload());
+    });
+
+    location.reload();
 }
 
 async function ChangeCrudObj(formName, type) {
@@ -33,7 +35,9 @@ async function ChangeCrudObj(formName, type) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(formData)
-    }).then(_ => location.reload());
+    });
+
+    location.reload()
 }
 
 async function LoadCrudObj(formname, type, id)
@@ -49,6 +53,6 @@ async function LoadCrudObj(formname, type, id)
 async function DeleteCrudObj(type, id) {
     await fetch(`/api/${type}/Delete?` + new URLSearchParams({ id }) , {
         method: "POST",
-    }).then(_ => location.reload());
-
+    });
+    location.reload()
 }
