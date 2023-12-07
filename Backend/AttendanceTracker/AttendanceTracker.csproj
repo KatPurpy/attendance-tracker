@@ -26,6 +26,8 @@
 
   <ItemGroup>
     <Folder Include="Models\Home\" />
+    <Folder Include="wwwroot\js - Copy\" />
+    <Folder Include="wwwroot\NewFolder\" />
   </ItemGroup>
 
 </Project>

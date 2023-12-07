@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 namespace AttendanceTracker
 {
     public class Program
@@ -10,7 +11,6 @@ namespace AttendanceTracker
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
             if (builder.Environment.IsDevelopment())
             {
                 builder.Services.AddEndpointsApiExplorer();

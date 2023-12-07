@@ -1,4 +1,5 @@
 ﻿using AttendanceTracker.Models.DB;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -6,6 +7,7 @@ namespace AttendanceTracker.Models.API
 {
     public class APIGroup : IAPIModelFor<APIGroup, DB.Group>, IIntDbKey
     {
+        [HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
         public string Name{ get; set; }
         public APIGroup ConvertToAPI(DbCtx databaseContext, DB.Group entity)
@@ -17,8 +19,9 @@ namespace AttendanceTracker.Models.API
     }
 
     public class APIStudent : IAPIModelFor<APIStudent, DB.Student>, IIntDbKey
-    {
-        public int Id { get; set; }
+	{
+		[HiddenInput(DisplayValue = false)]
+		public int Id { get; set; }
         public string Name { get; set; }
         public int GroupId { get; set; }
 
@@ -32,8 +35,9 @@ namespace AttendanceTracker.Models.API
     }
 
     public class APIDayEntry : IAPIModelFor<APIDayEntry, DB.DayEntry>, IIntDbKey
-    {
-        public int Id { get; set; }
+	{
+		[HiddenInput(DisplayValue = false)]
+		public int Id { get; set; }
         public DateTime Timestamp { get; set; }
         [MaxLength(16)]
         public string Value { get; set; }
