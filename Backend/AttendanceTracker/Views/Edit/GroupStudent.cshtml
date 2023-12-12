@@ -1,22 +1,24 @@
-﻿@model AttendanceTracker.Models.API.APIStudent
+﻿@model AttendanceTracker.Models.Edit.StudentListEditModel
 @using AttendanceTracker.Models.DB
 
 @{
 	ViewData["Title"] = "View";
 	var dbCtx = ViewBag.DbCtx as DbCtx;
-	var selectedGroup = (AttendanceTracker.Models.DB.Group)ViewBag.Group;
 }
 
 @section Scripts
 {
 	<script src="~/js/crudutil.js"> </script>
+	<script>
+		window.ValueOverrides = { 'GroupId': @Model.Group.Id}
+	</script>
 }
 
 <h1>Edit students</h1>
 
 @await Component.InvokeAsync("EditModalSimple", new
 	{
-		Model = Model,
+		Model = Model.CurrentStudent,
 		ObjectType = "Student"
 	})
 
@@ -30,22 +32,15 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach (var item in dbCtx.Students.Where(s=>s.Group == selectedGroup).OrderBy(g => g.Name))
+		@foreach (var item in Model.Group.Students.OrderBy(g => g.Name).ToArray())
 		{
 			<tr>
-				<td>
-					@item.Name
-				</td>
-				<td class="border border-danger border-2">
-					<!-- Button trigger modal -->
-					<button type="button" onclick="LoadCrudObj('inputForm_edit', 'Student', '@item.Id')" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
-						Edit
-					</button>
-					<a asp-action="Details" asp-route-id="@item.Name">Details</a> |
-					<button type="button" onclick="DeleteCrudObj('Student', '@item.Id')" class="btn btn-danger">
-						Delete
-					</button>
-				</td>
+				<td>@item.Name</td>
+				@await Component.InvokeAsync("ListItemEditDetailsDelete", new
+					{
+						Model = item,
+						ObjectType = "Student",
+					})
 			</tr>
 		}
 	</tbody>

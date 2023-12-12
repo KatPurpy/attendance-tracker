@@ -1,0 +1,17 @@
+﻿@model dynamic
+
+
+
+	<td>
+		<!-- Button trigger modal -->
+		<button type="button" onclick="SetEditingCrudObject(); LoadCrudObj('inputForm_edit', '@ViewData["ObjectType"]', '@Model.Id')" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
+			Edit
+		</button>
+		@if(ViewData.ContainsKey("DetailsUrl"))
+		{ 
+			<a href="@ViewData["DetailsUrl"]">Details</a>
+		}
+		<button type="button" onclick="ResetFormData('inputForm_edit'); DeleteCrudObj('@ViewData["ObjectType"]', '@Model.Id')" class="btn btn-danger">
+			Delete
+		</button>
+	</td>

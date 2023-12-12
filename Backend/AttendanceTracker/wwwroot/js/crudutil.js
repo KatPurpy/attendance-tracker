@@ -29,6 +29,11 @@ async function ChangeCrudObj(formName, type) {
     let formData = convertFormToObject(formName);
     console.log(formData);
 
+    for (var key in window.ValueOverrides)
+    {
+        formData[key] = window.ValueOverrides[key];
+    }
+
     switch (window.CrudObjectMode)
     { 
         case 'edit':

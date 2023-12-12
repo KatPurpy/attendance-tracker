@@ -1,4 +1,5 @@
 ﻿using AttendanceTracker.Models;
+using AttendanceTracker.Models.Edit;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -16,18 +17,26 @@ namespace AttendanceTracker.Controllers
             _logger = logger;
         }
 
-        public IActionResult Group()
+		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+		public IActionResult Group()
         {
             ViewBag.DbCtx = dbCtx;
             return View();
         }
 
-        [Route("GroupStudent/{id}")]
+		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+		[Route("GroupStudent/{id}")]
 		public IActionResult GroupStudent(int id)
 		{
 			ViewBag.DbCtx = dbCtx;
-            ViewBag.Group = dbCtx.Groups.Find(id);
-			return View();
+            var entry = dbCtx.Groups.Find(id);
+            dbCtx.Entry(entry).Collection(t=>t.Students).Load();
+			return View(
+                new StudentListEditModel()
+                {
+                    Group = entry
+				}
+                );
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

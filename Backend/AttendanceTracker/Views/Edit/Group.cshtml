@@ -31,23 +31,19 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach (var item in dbCtx.Groups.OrderBy(g => g.Name))
+		@foreach (var item in dbCtx.Groups.OrderBy(g => g.Name).ToArray())
 		{
-			<tr>
-				<td>
-					@item.Name
-				</td>
-				<td class="border border-danger border-2">
-					<!-- Button trigger modal -->
-					<button type="button" onclick="SetEditingCrudObject(); LoadCrudObj('inputForm_edit', 'Group', '@item.Id')" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
-						Edit
-					</button>
-					<a href="~/GroupStudent/@item.Id">Details</a> |
-					<button type="button" onclick="ResetFormData('inputForm_edit'); DeleteCrudObj('Group', '@item.Id')" class="btn btn-danger">
-						Delete
-					</button>
-				</td>
-			</tr>
+		<tr>
+				@{dbCtx.Entry(item).Collection(item => item.Students).Load();}
+				
+				<td>@item.Name</td>
+				<td>@item.Students.Count students</td>
+				@await Component.InvokeAsync("ListItemEditDetailsDelete", new { 
+					Model = item,
+					ObjectType = "Group",
+					DetailsUrl = "/GroupStudent/"+item.Id
+				})
+		</tr>
 		}
 	</tbody>
 </table>
