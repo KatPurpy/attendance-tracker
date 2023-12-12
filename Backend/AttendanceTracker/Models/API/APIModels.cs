@@ -23,7 +23,8 @@ namespace AttendanceTracker.Models.API
 		[HiddenInput(DisplayValue = false)]
 		public int Id { get; set; }
         public string Name { get; set; }
-        public int GroupId { get; set; }
+		[HiddenInput(DisplayValue = false)]
+		public int GroupId { get; set; }
 
         public APIStudent ConvertToAPI(DbCtx databaseContext, DB.Student entity)
         {

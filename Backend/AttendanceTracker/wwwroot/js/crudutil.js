@@ -1,3 +1,18 @@
+function SetCreatingCrudObject()
+{
+    window.CrudObjectMode = 'create';
+}
+
+function SetEditingCrudObject()
+{
+    window.CrudObjectMode = 'edit';
+}
+
+function ResetFormData(form)
+{
+    document.querySelector('#' + form).reset();
+}
+
 function convertFormToObject(form) {
     let formData = new FormData(document.querySelector('#'+form));
     let result = Object.fromEntries(formData);
@@ -10,33 +25,31 @@ function convertFormToObject(form) {
     return result;
 }
 
-async function CreateCrudObj(formName, type) {
-    let formData = convertFormToObject(formName);
-    console.log(formData);
-
-    await fetch(`/api/${type}/Create`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData)
-    });
-
-    location.reload();
-}
-
 async function ChangeCrudObj(formName, type) {
     let formData = convertFormToObject(formName);
     console.log(formData);
 
-    await fetch(`/api/${type}/Update?` + new URLSearchParams({ id }), {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData)
-    });
-
+    switch (window.CrudObjectMode)
+    { 
+        case 'edit':
+            await fetch(`/api/${type}/Update?` + new URLSearchParams({ id: formData.Id }), {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData)
+            });
+            break;
+        case 'create':
+            await fetch(`/api/${type}/Create`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData)
+            });
+            break;
+    }
     location.reload()
 }
 

@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Home\" />
+    <Folder Include="Models\Edit\" />
     <Folder Include="wwwroot\js - Copy\" />
     <Folder Include="wwwroot\NewFolder\" />
   </ItemGroup>

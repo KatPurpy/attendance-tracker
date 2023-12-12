@@ -1,0 +1,52 @@
+﻿@model AttendanceTracker.Models.API.APIStudent
+@using AttendanceTracker.Models.DB
+
+@{
+	ViewData["Title"] = "View";
+	var dbCtx = ViewBag.DbCtx as DbCtx;
+	var selectedGroup = (AttendanceTracker.Models.DB.Group)ViewBag.Group;
+}
+
+@section Scripts
+{
+	<script src="~/js/crudutil.js"> </script>
+}
+
+<h1>Edit students</h1>
+
+@await Component.InvokeAsync("EditModalSimple", new
+	{
+		Model = Model,
+		ObjectType = "Student"
+	})
+
+<p>
+	<button asp-action="Create" onclick="SetCreatingCrudObject(); ResetFormData('inputForm_edit');" class="btn btn-primary" data-toggle="modal" data-target="#editModal">Create New</button>
+</p>
+<table class="table table-bordered table-hover">
+	<thead>
+		<tr>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in dbCtx.Students.Where(s=>s.Group == selectedGroup).OrderBy(g => g.Name))
+		{
+			<tr>
+				<td>
+					@item.Name
+				</td>
+				<td class="border border-danger border-2">
+					<!-- Button trigger modal -->
+					<button type="button" onclick="LoadCrudObj('inputForm_edit', 'Student', '@item.Id')" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
+						Edit
+					</button>
+					<a asp-action="Details" asp-route-id="@item.Name">Details</a> |
+					<button type="button" onclick="DeleteCrudObj('Student', '@item.Id')" class="btn btn-danger">
+						Delete
+					</button>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
