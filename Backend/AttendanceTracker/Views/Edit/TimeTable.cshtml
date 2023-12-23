@@ -1,0 +1,94 @@
+﻿@model AttendanceTracker.Models.TimeTableViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@functions {
+	IEnumerable<DateTime> Enumerate()
+	{
+
+	@for (var day = Model.RangeStart; day < Model.RangeEnd; day = day.AddDays(1))
+		{
+			yield return day;
+		}
+	}
+}
+<div style="background-color: green; overflow:auto;min-height:100%;min-width:100%;width:100%;height:100%">
+	<table class="table table-bordered table-fixed table-striped table-responsive">
+
+		<tr>
+			<th>
+				Student name/Date
+			</th>
+
+			@foreach (var day in Enumerate())
+			{
+				<th class=".col-sm-5">
+					@foreach (var c in day.ToString("dd.MM").ToCharArray())
+					{
+						@c
+						<br />
+					}
+				</th>
+			}
+		</tr>
+			@{
+				int i = 0;
+			}
+			@foreach (var student in Model.group.Students.OrderBy(s=>s.Name))
+			{
+				i++;
+		
+				<tr>
+					<td>
+						@(i + ". " + student.Name)
+					</td>
+					@foreach (var day in Enumerate())
+					{
+						<td>
+						<input class="entry-cell" type="text" maxlength="3" size="3" student="@student.Id" date="@day.ToString("yyyy-MM-dd")" />
+						</td>
+					}
+				</tr>
+			}
+	</table>
+</div>
+<script>
+	let nodeList = document.querySelectorAll(".entry-cell");
+	for (let node of nodeList)
+	{
+		node.addEventListener('change', function () {
+			let student = node.getAttribute('student');
+			let date = node.getAttribute('date');
+			let urlParams = new URLSearchParams({ studentId: student, day: date, value: this.value });
+			fetch("/api/DayEntry/Edit?" + urlParams, { method: "POST" })
+		});
+	}
+
+	let currentPageQuery = new URLSearchParams(window.location.search);
+	let groupId = location.pathname.split('/').pop();
+	let rangeStart = currentPageQuery.get('rangeStart');
+	let rangeEnd = currentPageQuery.get('rangeEnd');
+
+	fetch(`/api/DayEntry/GetEntries/${groupId}?` + new URLSearchParams({ rangeStart, rangeEnd }))
+		.then(request => request.json())
+		.then(response => {
+			let dayEntries = response.dayEntries;
+			console.log(dayEntries);
+			
+			for(let entry of dayEntries)
+			{
+				console.log(entry);
+
+				let studentId = entry.studentId;
+				let day = entry.timestamp.split('T')[0]
+
+				let query = `input.entry-cell[student="${studentId}"][date*="${day}"]`;
+				let node = document.querySelector(query);
+
+				node.value = entry.value;
+			}
+		});
+</script>

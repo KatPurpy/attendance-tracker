@@ -39,7 +39,7 @@ namespace AttendanceTracker.Models.API
 	{
 		[HiddenInput(DisplayValue = false)]
 		public int Id { get; set; }
-        public DateTime Timestamp { get; set; }
+		public DateTime Timestamp { get; set; }
         [MaxLength(16)]
         public string Value { get; set; }
         public int StudentId { get; set; }
@@ -49,7 +49,7 @@ namespace AttendanceTracker.Models.API
             Id = entity.Id;
             Timestamp = entity.Timestamp;
             Value = entity.Value;
-            StudentId = databaseContext.Set<Student>().First(ent => ent.Id == entity.Id).Id;
+            StudentId = entity.StudentId;
             return this;
         }
     }
