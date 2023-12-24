@@ -12,6 +12,7 @@
 </head>
 <body style="height:100%">
 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
 
     <div style="height:100%" class="container">
@@ -19,7 +20,6 @@
             @RenderBody()
         </main>
     </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

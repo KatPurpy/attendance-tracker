@@ -15,7 +15,7 @@ namespace AttendanceTracker.Models
 
 		public IEnumerable<DateTime> GetDaysEnumerator()
 		{
-			for(var day = RangeStart; day < RangeEnd; day = day.AddDays(1))
+			for(var day = RangeStart; day <= RangeEnd; day = day.AddDays(1))
 			{
 				yield return day;
 			}
