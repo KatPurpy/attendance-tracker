@@ -55,7 +55,7 @@ namespace AttendanceTracker.Controllers.ApiControllers
 
             DayEntry? entry = null;
 
-			entry = DbCtx.DayEntries.Where(e => (e.Timestamp == day) && (e.StudentId == studentID)).FirstOrDefault();
+			entry = DbCtx.DayEntries.FirstOrDefault(e => (e.Timestamp == day) && (e.StudentId == studentID));
 
             if (entry != null)
             {
