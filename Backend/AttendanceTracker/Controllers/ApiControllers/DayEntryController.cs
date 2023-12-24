@@ -25,12 +25,12 @@ namespace AttendanceTracker.Controllers.ApiControllers
             rangeEnd = new DateTime(rangeEnd.Year, rangeEnd.Month, rangeEnd.Day, 0, 0, 0, DateTimeKind.Utc);
 
 			var groupStudents = DbCtx.Students.Where(student => student.GroupId == groupID).Select(student => student.Id).ToHashSet();
+            
             var dayEntries = DbCtx.DayEntries.Where(
                 e => groupStudents.Contains(e.StudentId) 
                 && rangeStart <= e.Timestamp
                 && e.Timestamp <= rangeEnd);
 
-            Dictionary<int, List<APIDayEntry>> entries = new Dictionary<int, List<APIDayEntry>>();
 
             var timeTable = new APITimeTable();
 

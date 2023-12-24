@@ -12,5 +12,13 @@ namespace AttendanceTracker.Models
 
 		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
 		public DateTime RangeEnd { get; set; }
+
+		public IEnumerable<DateTime> GetDaysEnumerator()
+		{
+			for(var day = RangeStart; day < RangeEnd; day = day.AddDays(1))
+			{
+				yield return day;
+			}
+		}
 	}
 }

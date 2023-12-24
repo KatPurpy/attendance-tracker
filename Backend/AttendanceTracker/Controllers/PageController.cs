@@ -5,13 +5,13 @@ using System.Diagnostics;
 
 namespace AttendanceTracker.Controllers
 {
-    public class EditController : Controller
+    public class PageController : Controller
     {
-        private readonly ILogger<EditController> _logger;
+        private readonly ILogger<PageController> _logger;
 
         private readonly DbCtx dbCtx;
 
-        public EditController(DbCtx dbCtx, ILogger<EditController> logger)
+        public PageController(DbCtx dbCtx, ILogger<PageController> logger)
         {
             this.dbCtx = dbCtx;
             _logger = logger;
