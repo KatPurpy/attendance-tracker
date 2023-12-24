@@ -24,7 +24,7 @@ namespace AttendanceTracker.Controllers.ApiControllers
             rangeStart = new DateTime(rangeStart.Year, rangeStart.Month,  rangeStart.Day, 0, 0, 0, DateTimeKind.Utc);
             rangeEnd = new DateTime(rangeEnd.Year, rangeEnd.Month, rangeEnd.Day, 0, 0, 0, DateTimeKind.Utc);
 
-			var groupStudents = DbCtx.Students.Where(student => student.GroupId == groupID).Select(student => student.Id).ToHashSet();
+			var groupStudents = DbCtx.Students.Where(student => student.GroupId == groupID).Select(student => student.Id);
             
             var dayEntries = DbCtx.DayEntries.Where(
                 e => groupStudents.Contains(e.StudentId) 
