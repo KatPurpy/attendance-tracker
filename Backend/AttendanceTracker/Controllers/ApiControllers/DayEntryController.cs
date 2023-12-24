@@ -80,7 +80,6 @@ namespace AttendanceTracker.Controllers.ApiControllers
                     Value = value
                 };
                 DbCtx.DayEntries.Add(entry);
-				Console.WriteLine("NEW {0} {1} {2}", studentID, day, value);
 			}
 
             await DbCtx.SaveChangesAsync();
