@@ -18,7 +18,7 @@ function SetupDatepicker()
 	let yearSelector = document.querySelector("#year-select");
 
 	let params = GetCurrentPageParams();
-	let startRange = params.rangeStart.split('-');
+	let startRange = params.rangeStart.split('-'); // server returns ISO formatted time, we are only interested in date
 	let year = parseInt(startRange[0], 10);
 	let month = parseInt(startRange[1], 10);
 
