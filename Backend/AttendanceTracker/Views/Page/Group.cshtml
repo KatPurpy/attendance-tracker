@@ -41,7 +41,8 @@
 				@await Component.InvokeAsync("ListItemEditDetailsDelete", new { 
 					Model = item,
 					ObjectType = "Group",
-					DetailsUrl = "/GroupStudent/"+item.Id
+					DetailsUrl = "/GroupStudent/"+item.Id,
+					DetailsText = "Edit students"
 				})
 		</tr>
 		}

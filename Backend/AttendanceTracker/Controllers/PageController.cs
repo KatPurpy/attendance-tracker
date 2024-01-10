@@ -17,6 +17,7 @@ namespace AttendanceTracker.Controllers
             _logger = logger;
         }
 
+        [Route("Group")]
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Group()
         {

@@ -18,7 +18,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\InfoController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Controllers\ApiControllers\GroupController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Controllers\InfoController.cs" />
   </ItemGroup>
 
   <ItemGroup>
