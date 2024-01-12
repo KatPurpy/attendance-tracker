@@ -13,13 +13,20 @@
 <body style="height:100%">
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <header>
+        <a href="~/Group">Groups</a>
+    </header>
+    
+    <hr />
 
 
-    <div style="height:100%" class="container">
+    <div class="container">
         <main style="height:100%" role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+
+    <hr />
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

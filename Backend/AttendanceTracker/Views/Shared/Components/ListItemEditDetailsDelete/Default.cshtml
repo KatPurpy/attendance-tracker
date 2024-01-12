@@ -2,7 +2,6 @@
 
 
 
-	<td>
 		<!-- Button trigger modal -->
 		<button type="button" onclick="SetEditingCrudObject(); LoadCrudObj('inputForm_edit', '@ViewData["ObjectType"]', '@Model.Id')" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
 			Edit
@@ -14,4 +13,3 @@
 		<button type="button" onclick="ResetFormData('inputForm_edit'); DeleteCrudObj('@ViewData["ObjectType"]', '@Model.Id')" class="btn btn-danger">
 			Delete
 		</button>
-	</td>

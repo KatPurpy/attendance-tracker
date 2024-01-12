@@ -17,6 +17,7 @@ namespace AttendanceTracker.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
         [Route("Group")]
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Group()
@@ -44,23 +45,17 @@ namespace AttendanceTracker.Controllers
 		[HttpGet]
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		[Route("TimeTable/{id}")]
-		public IActionResult TimeTable(int id, DateTime rangeStart, DateTime rangeEnd)
+		public IActionResult TimeTable(int id, DateTime date)
 		{
 			ViewBag.DbCtx = dbCtx;
 			var entry = dbCtx.Groups.Find(id);
 			dbCtx.Entry(entry).Collection(t => t.Students).Load();
 			
-            if(rangeEnd < rangeStart)
-            {
-                throw new InvalidOperationException();
-            }
-
             return View(
 				new TimeTableViewModel()
                 {
                     group = entry,
-                    RangeStart = rangeStart,
-                    RangeEnd = rangeEnd
+                    date = date
                 }
 				);
 		}

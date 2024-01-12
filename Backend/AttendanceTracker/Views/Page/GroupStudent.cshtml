@@ -14,7 +14,7 @@
 	</script>
 }
 
-<h1>Edit students</h1>
+<h1>Students of @Model.Group.Name group</h1>
 
 @await Component.InvokeAsync("EditModalSimple", new
 	{
@@ -36,11 +36,13 @@
 		{
 			<tr>
 				<td>@item.Name</td>
+				<td>
 				@await Component.InvokeAsync("ListItemEditDetailsDelete", new
 					{
 						Model = item,
 						ObjectType = "Student",
 					})
+				</td>
 			</tr>
 		}
 	</tbody>

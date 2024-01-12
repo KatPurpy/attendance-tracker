@@ -14,15 +14,17 @@ namespace AttendanceTracker.Controllers.ApiControllers
 
         [HttpGet]
         [Route("GetEntries/{groupID}")]
-        public async Task<ActionResult<APITimeTable>> GetEntries(int groupID, DateTime rangeStart, DateTime rangeEnd)
+        public async Task<ActionResult<APITimeTable>> GetEntries(int groupID, DateTime date)
         {
             var group = await DbCtx.Groups.FindAsync(groupID);
             if( group == null)
             {
                 return NotFound();
             }
-            rangeStart = new DateTime(rangeStart.Year, rangeStart.Month,  rangeStart.Day, 0, 0, 0, DateTimeKind.Utc);
-            rangeEnd = new DateTime(rangeEnd.Year, rangeEnd.Month, rangeEnd.Day, 0, 0, 0, DateTimeKind.Utc);
+			int daysInMonth = DateTime.DaysInMonth(date.Year, date.Month);
+			DateTime rangeStart = new DateTime(date.Year, date.Month, 1, 0,0,0,DateTimeKind.Utc);
+			DateTime rangeEnd = new DateTime(date.Year, date.Month, daysInMonth, 0, 0, 0, DateTimeKind.Utc);
+
 
 			var groupStudents = DbCtx.Students.Where(student => student.GroupId == groupID).Select(student => student.Id);
             

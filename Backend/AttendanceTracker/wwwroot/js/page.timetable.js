@@ -17,9 +17,9 @@ function SetupDatepicker() {
     let yearSelector = document.querySelector("#year-select");
 
     let params = GetCurrentPageParams();
-    let startRange = params.rangeStart.split('-'); // server returns ISO formatted time, we are only interested in date
-    let year = parseInt(startRange[0], 10);
-    let month = parseInt(startRange[1], 10);
+    let pageDate = params.date.split('-'); // server returns ISO formatted time, we are only interested in date
+    let year = parseInt(pageDate[0], 10);
+    let month = parseInt(pageDate[1], 10);
 
     yearSelector.value = year;
     monthSelector.value = month;
@@ -31,19 +31,10 @@ function SetupDatepicker() {
 
     function EvaluateDate() {
         console.log(monthSelector.value, yearSelector.value);
-
-        let date = new Date(yearSelector.value, monthSelector.value - 1);
-        let year = date.getFullYear();
-        let month = date.getMonth() + 1;
-        let daysInMonth = GetDaysInMonth(date);
-
-        let rangeStart = year + "-" + month + "-" + 1;
-        let rangeEnd = year + "-" + month + "-" + daysInMonth;
-
+        let year = yearSelector.value;
+        let month = monthSelector.value;
         let params = GetCurrentPageParams();
-        params.rangeStart = rangeStart;
-        params.rangeEnd = rangeEnd;
-
+        params.date = year + '-' + month;
         let newURL = GetPageUrl(params);
         console.log(newURL);
         window.location = newURL;
@@ -101,18 +92,17 @@ function SetupDatepicker() {
 function GetCurrentPageParams() {
     let currentPageQuery = new URLSearchParams(window.location.search);
     let groupId = location.pathname.split('/').pop();
-    let rangeStart = currentPageQuery.get('rangeStart');
-    let rangeEnd = currentPageQuery.get('rangeEnd');
+    let date = currentPageQuery.get('date');
 
-    return { groupId, rangeStart, rangeEnd };
+    return { groupId, date };
 }
 
 function GetEditApiUrl(params) {
-    return `/api/DayEntry/GetEntries/${params.groupId}?` + new URLSearchParams({ rangeStart: params.rangeStart, rangeEnd: params.rangeEnd })
+    return `/api/DayEntry/GetEntries/${params.groupId}?` + new URLSearchParams({date: params.date})
 }
 
 function GetPageUrl(params) {
-    return `/TimeTable/${params.groupId}?` + new URLSearchParams({ rangeStart: params.rangeStart, rangeEnd: params.rangeEnd })
+    return `/TimeTable/${params.groupId}?` + new URLSearchParams({ date: params.date })
 }
 
 function RestoreFromServer() {
