@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AttendanceTracker.Migrations
 {
     /// <inheritdoc />
-    public partial class RecycleBin_Students_Groups : Migration
+    public partial class RecycleBin_Groups_Students : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,6 +20,7 @@ namespace AttendanceTracker.Migrations
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_RecycleBinGroups", x => x.GroupId);
                     table.ForeignKey(
                         name: "FK_RecycleBinGroups_Groups_GroupId",
                         column: x => x.GroupId,
@@ -37,6 +38,7 @@ namespace AttendanceTracker.Migrations
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_RecycleBinStudents", x => x.StudentId);
                     table.ForeignKey(
                         name: "FK_RecycleBinStudents_Students_StudentId",
                         column: x => x.StudentId,
@@ -44,16 +46,6 @@ namespace AttendanceTracker.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RecycleBinGroups_GroupId",
-                table: "RecycleBinGroups",
-                column: "GroupId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RecycleBinStudents_StudentId",
-                table: "RecycleBinStudents",
-                column: "StudentId");
         }
 
         /// <inheritdoc />

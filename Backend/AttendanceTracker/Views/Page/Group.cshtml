@@ -74,6 +74,9 @@
 						Delete
 					</button>
 				</td>
+				<td>
+					@(dbCtx.RecycleBinGroups.Find(item.Id) == null ? "not archived" : "archived") 
+				</td>
 		</tr>
 		}
 	</tbody>
