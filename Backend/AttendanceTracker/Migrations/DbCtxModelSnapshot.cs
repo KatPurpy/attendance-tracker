@@ -68,26 +68,26 @@ namespace AttendanceTracker.Migrations
 
             modelBuilder.Entity("AttendanceTracker.Models.DB.RecycleBinGroupEntry", b =>
                 {
-                    b.Property<DateTime>("ExpiresBy")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<int>("GroupId")
                         .HasColumnType("integer");
 
-                    b.HasIndex("GroupId");
+                    b.Property<DateTime>("ExpiresBy")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("GroupId");
 
                     b.ToTable("RecycleBinGroups");
                 });
 
             modelBuilder.Entity("AttendanceTracker.Models.DB.RecycleBinStudentEntry", b =>
                 {
-                    b.Property<DateTime>("ExpiresBy")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
 
-                    b.HasIndex("StudentId");
+                    b.Property<DateTime>("ExpiresBy")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("StudentId");
 
                     b.ToTable("RecycleBinStudents");
                 });

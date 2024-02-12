@@ -32,7 +32,6 @@ namespace AttendanceTracker.Controllers.ApiControllers
 				{
 					await DbCtx.RecycleBinGroups.AddAsync(new RecycleBinGroupEntry()
 					{
-						Id = id,
 						GroupId = id,
 						ExpiresBy = CalculateExpirationDay(DateTime.UtcNow)
 					});
@@ -69,7 +68,6 @@ namespace AttendanceTracker.Controllers.ApiControllers
 				{
 					DbCtx.RecycleBinStudents.Add(new RecycleBinStudentEntry()
 					{
-						Id = id,
 						StudentId = id,
 						ExpiresBy = CalculateExpirationDay(DateTime.UtcNow)
 					});

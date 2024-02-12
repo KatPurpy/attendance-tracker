@@ -17,6 +17,14 @@
 	ObjectType = "Group"
 })
 
+<script>
+	async function Delete()
+	{
+		await fetch("/api/Group/Archive/" + window.UI_TargetGroup, { method: 'POST' });
+		location.reload();
+	}
+</script>
+
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -32,7 +40,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-					<button type="button" class="btn btn-danger">Delete</button>
+					<button type="button" onclick="Delete()" class="btn btn-danger">Delete</button>
 				</div>
 			</form>
 		</div>
@@ -51,7 +59,17 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach (var item in dbCtx.Groups.OrderBy(g => g.Name).ToArray())
+		@{
+			// select groups that are not archived
+			var queryGroupsOrdered = dbCtx.Groups.OrderBy(g => g.Name);
+			var queryGroupIds = queryGroupsOrdered.Select(group => group.Id);
+			var queryRecycleBinGroups =
+			dbCtx
+			.RecycleBinGroups
+			.Where(entry => queryGroupIds.Contains(entry.GroupId))
+			.ToDictionary(key => key.GroupId);
+		}
+		@foreach (var item in queryGroupsOrdered.ToArray())
 		{
 		<tr>
 				@{dbCtx.Entry(item).Collection(item => item.Students).Load();}
@@ -70,9 +88,19 @@
 				})
 				</td>
 				<td>
-					<button type="button" data-toggle="modal" data-target="#deleteModal"  class="btn btn-danger">
+					<button type="button" onclick="window.UI_TargetGroup=@item.Id" data-toggle="modal" data-target="#deleteModal"  class="btn btn-danger">
 						Delete
 					</button>
+				</td>
+				<td>
+					@if (queryRecycleBinGroups.TryGetValue(item.Id, out var archive))
+					{
+						<b>archived. scheduled for removal in @((archive.ExpiresBy - DateTime.UtcNow).TotalHours.ToString("0")) hours by @archive.ExpiresBy.ToLocalTime().ToString("u")</b>
+					}
+					else
+					{
+						<b>not archived</b>
+					}
 				</td>
 		</tr>
 		}

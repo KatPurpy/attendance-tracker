@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AttendanceTracker.Migrations
 {
     [DbContext(typeof(DbCtx))]
-    [Migration("20240115085925_RecycleBin_Students_Groups")]
-    partial class RecycleBin_Students_Groups
+    [Migration("20240116071215_RecycleBin_Groups_Students")]
+    partial class RecycleBin_Groups_Students
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,26 +71,26 @@ namespace AttendanceTracker.Migrations
 
             modelBuilder.Entity("AttendanceTracker.Models.DB.RecycleBinGroupEntry", b =>
                 {
-                    b.Property<DateTime>("ExpiresBy")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<int>("GroupId")
                         .HasColumnType("integer");
 
-                    b.HasIndex("GroupId");
+                    b.Property<DateTime>("ExpiresBy")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("GroupId");
 
                     b.ToTable("RecycleBinGroups");
                 });
 
             modelBuilder.Entity("AttendanceTracker.Models.DB.RecycleBinStudentEntry", b =>
                 {
-                    b.Property<DateTime>("ExpiresBy")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
 
-                    b.HasIndex("StudentId");
+                    b.Property<DateTime>("ExpiresBy")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("StudentId");
 
                     b.ToTable("RecycleBinStudents");
                 });
