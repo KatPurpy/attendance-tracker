@@ -5,6 +5,46 @@
 @{
 }
 
+<div class="modal fade" id="fastInputModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">FastInput</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					This tool is designed to help inputting student info faster by removing lookup in the table
+					<hr />
+					Today's date
+					<br />
+				<input id="fastInput_date" type="date" onchange="UpdateCurrentCellValue(false)" />
+					<br />
+					<span>Enter <b>STUDENT VALUE</b> pair</span>
+					<br />
+					<input id="fastInput_input" type="text"
+						   onchange="OnFastInputChange(this.value.split(' ')[0]);"
+						   onkeypress="this.onchange();"
+						   onpaste="this.onchange();"
+						   oninput="this.onchange();" />
+					<br />
+					<hr />
+					Info
+					<br />
+					<span id="fastInput_previewStudent">Selected student: NONE</span>
+					<br />
+					<span id="fastInput_previewCellValue">Selected student value: NONE</span>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Done</button>
+				</div>
+		</div>
+	</div>
+</div>
+
+<button data-toggle="modal" data-target="#fastInputModal">Fast input</button>
+
 <button id="prev-month">&lt;---</button>
 
 <select name="" id="month-select">
@@ -66,7 +106,7 @@
 				i++;
 		
 				<tr>
-					<td>
+					<td class="studentCells" student="@student.Id">
 						@(i + ". " + student.Name)
 					</td>
 					@foreach (var day in Model.GetDaysEnumerator())
@@ -79,4 +119,6 @@
 			}
 	</table>
 </div>
-<script src="/js/page.timetable.js"></script>
+
+<script src="~/js/page.timetable.js"></script>
+<script src="~/js/page.timeteable.fastinput.js"></script>

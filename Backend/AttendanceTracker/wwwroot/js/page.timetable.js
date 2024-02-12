@@ -2,12 +2,16 @@ function SetupCellEvents() {
     let nodeList = document.querySelectorAll(".entry-cell");
     for (let node of nodeList) {
         node.addEventListener('change', function () {
-            let student = node.getAttribute('student');
-            let date = node.getAttribute('date');
-            let urlParams = new URLSearchParams({ studentId: student, day: date, value: this.value });
-            fetch("/api/DayEntry/Edit?" + urlParams, { method: "POST" })
+            CommitCell(this);
         });
     }
+}
+
+function CommitCell(cell) {
+    let student = cell.getAttribute('student');
+    let date = cell.getAttribute('date');
+    let urlParams = new URLSearchParams({ studentId: student, day: date, value: cell.value });
+    fetch("/api/DayEntry/Edit?" + urlParams, { method: "POST" })
 }
 
 function SetupDatepicker() {
