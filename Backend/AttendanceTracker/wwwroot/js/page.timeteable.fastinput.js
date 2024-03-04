@@ -5,7 +5,8 @@
         return [...document.getElementsByClassName("studentCells")]
     }
 
-    // this lookup algorithm searches by returning substring, it's enough for <=30 students
+    // this lookup algorithm searches by returning first name that matches the input
+    // it's enough for <=30 students per class
     let LookupStudentName = function (query) {
         if (studentCache === undefined) {
             studentCache = load();
