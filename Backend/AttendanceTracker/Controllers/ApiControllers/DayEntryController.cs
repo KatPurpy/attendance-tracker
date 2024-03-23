@@ -1,10 +1,12 @@
 ﻿using AttendanceTracker.Models.API;
 using AttendanceTracker.Models.DB;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace AttendanceTracker.Controllers.ApiControllers
 {
+    [Authorize]
     public class DayEntryController : BaseObjectListController<Models.DB.DayEntry, Models.API.APIDayEntry>
     {
         public DayEntryController(DbCtx context) : base(context)

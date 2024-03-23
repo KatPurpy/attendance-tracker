@@ -1,10 +1,12 @@
 ﻿using AttendanceTracker.Models.DB;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AttendanceTracker.Controllers.ApiControllers
 {
-	[Route("api")]
+    [Authorize]
+    [Route("api")]
 	public class RecycleBinController : Controller
 	{
 		DbCtx DbCtx;

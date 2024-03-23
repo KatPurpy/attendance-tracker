@@ -1,8 +1,9 @@
 ﻿using AttendanceTracker.Models.DB;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 namespace AttendanceTracker
 {
-    public class DbCtx : DbContext
+    public class DbCtx : IdentityDbContext
     {
         public DbSet<Group> Groups { get; set; }
         public DbSet<Student> Students { get; set; }
@@ -15,6 +16,7 @@ namespace AttendanceTracker
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // TODO: Seed admin
             base.OnModelCreating(modelBuilder);;
         }
     }

@@ -13,8 +13,13 @@
 <body style="height:100%">
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    
+    
     <header>
-        <a href="~/Group">Groups</a>
+        @if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            <a href="~/Group">Groups</a>
+        }
     </header>
     
     <hr />
