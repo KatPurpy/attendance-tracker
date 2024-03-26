@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AttendanceTracker.Controllers.ApiControllers
 {
-    [Authorize(Roles = "Teacher")]
+    [Authorize(Roles = "Administrator, Teacher")]
     [Route("api")]
 	public class RecycleBinController : Controller
 	{
@@ -44,6 +44,7 @@ namespace AttendanceTracker.Controllers.ApiControllers
 			return NotFound();
 		}
 
+		[Authorize(Roles = "Administrator")]
 		[HttpPost]
 		[Route("Group/Unarchive/{id}")]
 		public async Task<IActionResult> UnarchiveGroup(int id)
