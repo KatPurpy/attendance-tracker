@@ -1,5 +1,6 @@
 ﻿using AttendanceTracker.Models;
 using AttendanceTracker.Models.Edit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -17,6 +18,7 @@ namespace AttendanceTracker.Controllers
             _logger = logger;
         }
 
+        [Authorize(Roles = "Teacher")]
         [HttpGet]
         [Route("Group")]
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -26,6 +28,7 @@ namespace AttendanceTracker.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Teacher")]
         [HttpGet]
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		[Route("GroupStudent/{id}")]
@@ -42,7 +45,8 @@ namespace AttendanceTracker.Controllers
                 );
 		}
 
-		[HttpGet]
+        [Authorize(Roles = "Teacher")]
+        [HttpGet]
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		[Route("TimeTable/{id}")]
 		public IActionResult TimeTable(int id, DateTime date)

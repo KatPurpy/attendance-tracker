@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AttendanceTracker.Controllers.ApiControllers
 {
-    [Authorize]
+    [Authorize(Roles = "Teacher")]
     public class DayEntryController : BaseObjectListController<Models.DB.DayEntry, Models.API.APIDayEntry>
     {
         public DayEntryController(DbCtx context) : base(context)

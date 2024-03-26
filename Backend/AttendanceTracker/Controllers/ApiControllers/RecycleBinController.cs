@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AttendanceTracker.Controllers.ApiControllers
 {
-    [Authorize]
+    [Authorize(Roles = "Teacher")]
     [Route("api")]
 	public class RecycleBinController : Controller
 	{

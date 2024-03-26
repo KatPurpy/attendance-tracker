@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AttendanceTracker.Controllers.ApiControllers
 {
-    [Authorize]
+    [Authorize(Roles = "Teacher")]
     public class StudentController : BaseObjectListController<Student, APIStudent>
     {
         public StudentController(DbCtx context) : base(context)
