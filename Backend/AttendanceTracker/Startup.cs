@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace AttendanceTracker
@@ -28,7 +29,7 @@ namespace AttendanceTracker
             {
                 options.UseNpgsql(Configuration.GetConnectionString("PostgreSQL"));
             });
-            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<DbCtx>();
+            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = !true).AddEntityFrameworkStores<DbCtx>();
 
             services.ConfigureApplicationCookie(options => {
                 options.AccessDeniedPath = "/Login";
@@ -66,6 +67,8 @@ namespace AttendanceTracker
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+
             app.Use(async (ctx, next) =>
             {
                 await next();
@@ -98,10 +101,12 @@ namespace AttendanceTracker
 
             app.UseAuthorization();
             app.UseAuthentication();
-            
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                SetupRoleAndDefaultAdmin(scope.ServiceProvider).Wait();
+            }
 
-
-            app.UseEndpoints(endpoints =>
+			app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllerRoute(
@@ -116,6 +121,26 @@ namespace AttendanceTracker
 
             });
 
+        }
+
+        async Task SetupRoleAndDefaultAdmin(IServiceProvider services)
+        {
+			var scopeFactory = services.GetRequiredService<IServiceScopeFactory>();
+            using (var scope = scopeFactory.CreateScope())
+            {
+                var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                string[] roles = new[] { "Administrator", "Teacher" };
+
+                foreach (var role in roles)
+                {
+                    var identityRoleExists = await roleManager.RoleExistsAsync(role);
+                    if (!identityRoleExists)
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(role));
+                    }
+                }
+            }
         }
     }
 }
