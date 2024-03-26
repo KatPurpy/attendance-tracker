@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AttendanceTracker.Models.DB
 {
+
 	public class RecycleBinGroupEntry
 	{
 		[Key]

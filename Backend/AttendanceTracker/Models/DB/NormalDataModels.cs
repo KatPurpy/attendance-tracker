@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace AttendanceTracker.Models.DB
 {
-    public class Student : IIntDbKey
+	public class Student : IIntDbKey
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -28,7 +28,9 @@ namespace AttendanceTracker.Models.DB
         [MaxLength(64)]
         public string Name { get; set; }
         public ICollection<Student> Students { get; set; } = new List<Student>();
-    }
+
+		public string OwnerId { get; set; }
+	}
 
     public class DayEntry : IIntDbKey
     {
