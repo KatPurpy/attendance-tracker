@@ -101,9 +101,11 @@ namespace AttendanceTracker
 
             app.UseAuthorization();
             app.UseAuthentication();
+
+            // Seed for demo
             using (var scope = app.ApplicationServices.CreateScope())
             {
-                SetupRoleAndDefaultAdmin(scope.ServiceProvider).Wait();
+                DemoSeed(scope.ServiceProvider).Wait();
             }
 
 			app.UseEndpoints(endpoints =>
@@ -123,13 +125,29 @@ namespace AttendanceTracker
 
         }
 
-        async Task SetupRoleAndDefaultAdmin(IServiceProvider services)
+        static async Task DemoSeed(IServiceProvider services)
         {
 			var scopeFactory = services.GetRequiredService<IServiceScopeFactory>();
             using (var scope = scopeFactory.CreateScope())
             {
+                var dbctx = services.GetRequiredService<DbCtx>();
+
+                {
+                    dbctx.Database.EnsureCreated();
+
+                    var migrations = await dbctx.Database.GetPendingMigrationsAsync();
+
+                    if (migrations.Any())
+                    {
+                        await dbctx.Database.MigrateAsync();
+                    }
+                }
+                
+                
                 var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                
+
                 string[] roles = new[] { "Administrator", "Teacher" };
 
                 foreach (var role in roles)
@@ -140,6 +158,25 @@ namespace AttendanceTracker
                         await roleManager.CreateAsync(new IdentityRole(role));
                     }
                 }
+
+                (IdentityUser user, string[] roles, string password)[] users = new[]
+                {
+                    (new IdentityUser("administrator"), new string[]{"Administrator"}, "#LcrF2qCyWd5"),
+                    (new IdentityUser("michael_ivanovich"), new string[]{"Teacher"},"@oYdXo4c5Lm")
+                };
+
+                foreach(var userInfo in users)
+                {
+                    var user = await userManager.FindByNameAsync(userInfo.user.UserName);
+                    if(user == null)
+                    {
+                        await userManager.CreateAsync(userInfo.user, userInfo.password);
+                        user = await userManager.FindByIdAsync(userInfo.user.Id);
+                        await userManager.AddToRolesAsync(user, userInfo.roles);
+                    }
+                }
+
+                await dbctx.SaveChangesAsync();
             }
         }
     }
