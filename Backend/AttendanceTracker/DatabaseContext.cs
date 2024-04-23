@@ -1,6 +1,7 @@
 ﻿using AttendanceTracker.Models.DB;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using AttendanceTracker.Models.Identity;
 namespace AttendanceTracker
 {
     public class DbCtx : IdentityDbContext
@@ -19,5 +20,7 @@ namespace AttendanceTracker
             // TODO: Seed admin
             base.OnModelCreating(modelBuilder);;
         }
+
+        public DbSet<AttendanceTracker.Models.Identity.IdentityAppUser>? IdentityAppUser { get; set; }
     }
 }

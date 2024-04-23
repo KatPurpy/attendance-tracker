@@ -57,7 +57,7 @@ namespace AttendanceTracker.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Page", "Group");
+                return Redirect("/Group");
             }
             else
             {
