@@ -16,7 +16,6 @@ namespace AttendanceTracker
 
         public void ConfigureServices(IServiceCollection services)
         {
- 
 
 
             // Add services to the container.
@@ -57,6 +56,8 @@ namespace AttendanceTracker
                 options.User.RequireUniqueEmail = false;
             }
             );
+
+            
 
             if (this.Enviroment.IsDevelopment())
             {
@@ -99,8 +100,8 @@ namespace AttendanceTracker
 
             app.UseRouting();
 
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             // Seed for demo
             using (var scope = app.ApplicationServices.CreateScope())
@@ -162,7 +163,8 @@ namespace AttendanceTracker
                 (IdentityUser user, string[] roles, string password)[] users = new[]
                 {
                     (new IdentityUser("administrator"), new string[]{"Administrator"}, "#LcrF2qCyWd5"),
-                    (new IdentityUser("michael_ivanovich"), new string[]{"Teacher"},"@oYdXo4c5Lm")
+                    (new IdentityUser("michael_ivanovich"), new string[]{"Teacher"},"P@ssw0rd"),
+                    (new IdentityUser("test"), new string[]{"Teacher"},"P@ssw0rd"),
                 };
 
                 foreach(var userInfo in users)

@@ -25,6 +25,12 @@
         {
             <a href="~/Admin">Admin panel</a>
         }
+
+        @if (User?.Identity?.IsAuthenticated == true)
+        {
+            <a href="Login/Logout">Logout</a>
+            <span>@User.Identity.Name - @(User.IsInRole("Teacher") ? "Teacher" : (User.IsInRole("Administrator") ? "Admin" : ""))</span>
+        }
     </header>
     
     <hr />

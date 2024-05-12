@@ -18,20 +18,28 @@ namespace AttendanceTracker.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
+        [Route("ItWorks")]
         [Authorize(Roles = "Teacher")]
+        public IActionResult ItWorks()
+        {
+            return Content("hey");
+        }
+
         [HttpGet]
         [Route("Group")]
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [Authorize(Roles = "Teacher")]
 		public IActionResult Group()
         {
             ViewBag.DbCtx = dbCtx;
             return View();
         }
 
-        [Authorize(Roles = "Teacher")]
         [HttpGet]
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		[Route("GroupStudent/{id}")]
+        [Authorize(Roles = "Teacher")]
 		public IActionResult GroupStudent(int id)
 		{
 			ViewBag.DbCtx = dbCtx;

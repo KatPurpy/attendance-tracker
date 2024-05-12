@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AttendanceTracker.Models
 {
@@ -14,5 +16,8 @@ namespace AttendanceTracker.Models
 		public string Password { get; set; }
 
 		public bool RememberMe { get; set; }
+
+		[NotMapped]
+		public SignInResult SignInResult { get; set; }
 	}
 }

@@ -16,43 +16,19 @@ namespace AttendanceTracker.Controllers
         }
 
         public IActionResult Index()
-		{
-			return View();
-		}
-
-		[HttpPost]
-		public async Task<IActionResult> SignUp([FromForm] LoginModel login)
-		{
-            if(ModelState.IsValid)
-            {
-                IdentityUser user = new IdentityUser()
-                {
-                    UserName = login.Email,
-                    Email = login.Email
-                };
-                
-                var result = await _userManager.CreateAsync(user, login.Password);
-                if(result.Succeeded)
-                {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return Content("Success!");
-                }
-                else
-                {
-                    
-                    return Json(result.Errors);
-                }
-            }
-            else
-            {
-                return Content("Invalid state");
-            }
-            return Content("Sign in error.");
-		}
+        {
+            ViewBag.SignInResult = TempData["SignInResult"];
+            return View();
+        }
 
         [HttpPost]
         public async Task<IActionResult> Login([FromForm] LoginModel model)
         {
+            if(model.Email == null || model.Password == null)
+            {
+                TempData["SignInResult"] = false;
+                return RedirectToAction("Index");
+            }
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
 
             if (result.Succeeded)
@@ -61,8 +37,16 @@ namespace AttendanceTracker.Controllers
             }
             else
             {
-                return Content("login error");
+                TempData["SignInResult"] = false;
+                return RedirectToAction("Index");
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index");
         }
     }
 }

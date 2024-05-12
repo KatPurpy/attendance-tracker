@@ -3,18 +3,6 @@
     ViewData["Title"] = "View";
 }
 
-<form method="post" action="Login/Signup">
-    <div id="signup">
-        <h1>Sign up</h1>
-        <span>Email</span> <input type="text" name="Email"/>
-        <br />
-        <span>Password</span> <input type="text" name="Password" />
-        <br />
-        <input type="submit" />
-    </div>
-</form>
-<hr />
-
 <form method="post" action="Login/Login">
     <div id="login">
         <h1>Log in</h1>
@@ -23,5 +11,10 @@
         <span>Password</span><input type="text" name="Password" />
         <br />
         <input type="submit" />
+    </div>
+    <div id="errors">
+        @if(ViewBag.SignInResult == false){
+            <span>Failed to login</span>
+        }
     </div>
 </form>
