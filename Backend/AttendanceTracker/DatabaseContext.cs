@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using AttendanceTracker.Models.Identity;
 namespace AttendanceTracker
 {
-    public class DbCtx : IdentityDbContext
+    public class AppDatabaseContext : IdentityDbContext
     {
         public DbSet<Group> Groups { get; set; }
         public DbSet<Student> Students { get; set; }
@@ -13,7 +13,7 @@ namespace AttendanceTracker
         public DbSet<RecycleBinGroupEntry> RecycleBinGroups { get; set; }
         public DbSet<RecycleBinStudentEntry> RecycleBinStudents { get; set; }
 
-        public DbCtx(DbContextOptions<DbCtx> options) : base(options) { }
+        public AppDatabaseContext(DbContextOptions<AppDatabaseContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

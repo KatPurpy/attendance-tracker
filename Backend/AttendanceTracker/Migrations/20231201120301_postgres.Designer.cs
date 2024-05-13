@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace AttendanceTracker.Migrations
 {
-    [DbContext(typeof(DbCtx))]
+    [DbContext(typeof(AppDatabaseContext))]
     [Migration("20231201120301_postgres")]
     partial class postgres
     {

@@ -11,9 +11,9 @@ namespace AttendanceTracker.Controllers
     public class AdminController : Controller
     {
         public UserManager<IdentityUser> UserManager { get; set; }
-        public DbCtx DbCtx { get; set; }
+        public AppDatabaseContext DbCtx { get; set; }
 
-        public AdminController(UserManager<IdentityUser> userManager, DbCtx dbCtx)
+        public AdminController(UserManager<IdentityUser> userManager, AppDatabaseContext dbCtx)
         {
             UserManager = userManager;
             DbCtx = dbCtx;

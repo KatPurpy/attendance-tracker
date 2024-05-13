@@ -5,8 +5,8 @@ namespace AttendanceTracker.Controllers
 {
     public class ApiController : Controller
     {
-        public DbCtx Context;
-        public ApiController(DbCtx context) 
+        public AppDatabaseContext Context;
+        public ApiController(AppDatabaseContext context) 
         { 
             Context = context;
         }

@@ -9,7 +9,7 @@ namespace AttendanceTracker.Controllers.ApiControllers
     [Authorize(Roles = "Teacher")]
     public class DayEntryController : BaseObjectListController<Models.DB.DayEntry, Models.API.APIDayEntry>
     {
-        public DayEntryController(DbCtx context) : base(context)
+        public DayEntryController(AppDatabaseContext context) : base(context)
         {
 
         }

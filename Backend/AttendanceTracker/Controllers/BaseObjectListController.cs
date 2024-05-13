@@ -11,9 +11,9 @@ namespace AttendanceTracker.Controllers
         where DbType : class, IIntDbKey, new()
         where ApiType : class, IIntDbKey, IAPIModelFor<ApiType,DbType>
     {
-        public DbCtx DbCtx { get; set; }
+        public AppDatabaseContext DbCtx { get; set; }
 
-        public BaseObjectListController(DbCtx dbCtx)
+        public BaseObjectListController(AppDatabaseContext dbCtx)
         {
             DbCtx = dbCtx;
         }
@@ -72,14 +72,14 @@ namespace AttendanceTracker.Controllers
             return value;
         }
 
-        public static async Task<DbType> CreateEntry(DbCtx dbCtx, ApiType value)
+        public static async Task<DbType> CreateEntry(AppDatabaseContext dbCtx, ApiType value)
         {
             var entry = new DbType();
             await dbCtx.AddAsync(entry);
             return entry;
         }
 
-        public static async Task<DbType?> GetEntry(DbCtx dbCtx, int id)
+        public static async Task<DbType?> GetEntry(AppDatabaseContext dbCtx, int id)
         {
             return await dbCtx.FindAsync<DbType>(id);
         }

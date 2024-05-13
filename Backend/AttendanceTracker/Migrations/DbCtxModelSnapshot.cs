@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace AttendanceTracker.Migrations
 {
-    [DbContext(typeof(DbCtx))]
+    [DbContext(typeof(AppDatabaseContext))]
     partial class DbCtxModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

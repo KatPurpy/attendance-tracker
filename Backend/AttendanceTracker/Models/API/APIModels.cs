@@ -10,7 +10,7 @@ namespace AttendanceTracker.Models.API
         [HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
         public string Name{ get; set; }
-        public APIGroup ConvertToAPI(DbCtx databaseContext, DB.Group entity)
+        public APIGroup ConvertToAPI(AppDatabaseContext databaseContext, DB.Group entity)
         {
             Id = entity.Id;
             Name = entity.Name;
@@ -26,7 +26,7 @@ namespace AttendanceTracker.Models.API
 		[HiddenInput(DisplayValue = false)]
 		public int GroupId { get; set; }
 
-        public APIStudent ConvertToAPI(DbCtx databaseContext, DB.Student entity)
+        public APIStudent ConvertToAPI(AppDatabaseContext databaseContext, DB.Student entity)
         {
             Id = entity.Id;
             Name = entity.Name;
@@ -44,7 +44,7 @@ namespace AttendanceTracker.Models.API
         public string Value { get; set; }
         public int StudentId { get; set; }
 
-        public APIDayEntry ConvertToAPI(DbCtx databaseContext, DayEntry entity)
+        public APIDayEntry ConvertToAPI(AppDatabaseContext databaseContext, DayEntry entity)
         {
             Id = entity.Id;
             Timestamp = entity.Timestamp;

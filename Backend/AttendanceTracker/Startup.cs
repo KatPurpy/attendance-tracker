@@ -24,11 +24,11 @@ namespace AttendanceTracker
             services.AddRazorPages();
             
 
-            services.AddDbContext<DbCtx>((options) =>
+            services.AddDbContext<AppDatabaseContext>((options) =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("PostgreSQL"));
             });
-            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = !true).AddEntityFrameworkStores<DbCtx>();
+            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = !true).AddEntityFrameworkStores<AppDatabaseContext>();
 
             services.ConfigureApplicationCookie(options => {
                 options.AccessDeniedPath = "/Login";
@@ -131,7 +131,7 @@ namespace AttendanceTracker
 			var scopeFactory = services.GetRequiredService<IServiceScopeFactory>();
             using (var scope = scopeFactory.CreateScope())
             {
-                var dbctx = services.GetRequiredService<DbCtx>();
+                var dbctx = services.GetRequiredService<AppDatabaseContext>();
 
                 {
                     dbctx.Database.EnsureCreated();

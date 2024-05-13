@@ -10,9 +10,9 @@ namespace AttendanceTracker.Controllers
     {
         private readonly ILogger<PageController> _logger;
 
-        private readonly DbCtx dbCtx;
+        private readonly AppDatabaseContext dbCtx;
 
-        public PageController(DbCtx dbCtx, ILogger<PageController> logger)
+        public PageController(AppDatabaseContext dbCtx, ILogger<PageController> logger)
         {
             this.dbCtx = dbCtx;
             _logger = logger;

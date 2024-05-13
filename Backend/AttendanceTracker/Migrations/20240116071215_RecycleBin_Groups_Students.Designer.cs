@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace AttendanceTracker.Migrations
 {
-    [DbContext(typeof(DbCtx))]
+    [DbContext(typeof(AppDatabaseContext))]
     [Migration("20240116071215_RecycleBin_Groups_Students")]
     partial class RecycleBin_Groups_Students
     {

@@ -9,9 +9,9 @@ namespace AttendanceTracker.Controllers.ApiControllers
     [Route("api")]
 	public class RecycleBinController : Controller
 	{
-		DbCtx DbCtx;
+		AppDatabaseContext DbCtx;
 
-		public RecycleBinController(DbCtx dbCtx)
+		public RecycleBinController(AppDatabaseContext dbCtx)
 		{
 			DbCtx = dbCtx;
 		}

@@ -7,7 +7,7 @@ namespace AttendanceTracker.Controllers.ApiControllers
     [Authorize(Roles = "Teacher")]
     public class StudentController : BaseObjectListController<Student, APIStudent>
     {
-        public StudentController(DbCtx context) : base(context)
+        public StudentController(AppDatabaseContext context) : base(context)
         {
 
         }
