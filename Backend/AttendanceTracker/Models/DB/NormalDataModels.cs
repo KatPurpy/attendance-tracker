@@ -16,7 +16,7 @@ namespace AttendanceTracker.Models.DB
         [MaxLength(64)]
         public int GroupId { get; set; }
 
-        public Group Group { get; set; } = null;
+        public virtual Group Group { get; set; }
     }
 
     public class Group : IIntDbKey
@@ -42,6 +42,6 @@ namespace AttendanceTracker.Models.DB
         [MaxLength(16)]
         public string Value { get; set; }
         public int StudentId { get; set; }
-        public Student Student { get; set; } = null;
+        public virtual Student Student { get; set; } = null;
     }
 }

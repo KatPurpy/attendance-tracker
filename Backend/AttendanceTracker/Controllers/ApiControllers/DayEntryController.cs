@@ -1,6 +1,7 @@
 ﻿using AttendanceTracker.Models.API;
 using AttendanceTracker.Models.DB;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,7 +10,7 @@ namespace AttendanceTracker.Controllers.ApiControllers
     [Authorize(Roles = "Teacher")]
     public class DayEntryController : BaseObjectListController<Models.DB.DayEntry, Models.API.APIDayEntry>
     {
-        public DayEntryController(AppDatabaseContext context) : base(context)
+        public DayEntryController(AppDatabaseContext context, UserManager<IdentityUser> usermanager) : base(context, usermanager)
         {
 
         }
@@ -89,5 +90,10 @@ namespace AttendanceTracker.Controllers.ApiControllers
             await DbCtx.SaveChangesAsync();
             return Ok();
         }
-    }
+
+		public override bool UserHasAccess(IdentityUser user, AppDatabaseContext context, DayEntry entry)
+		{
+			return OwnershipUtils.DoesUserHaveAccess(user, context, entry);
+		}
+	}
 }

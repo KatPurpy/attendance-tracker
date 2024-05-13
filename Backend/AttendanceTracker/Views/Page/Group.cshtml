@@ -1,5 +1,4 @@
 ﻿@model AttendanceTracker.Models.API.APIGroup
-
 @{
 	ViewData["Title"] = "View";
 	var dbCtx = ViewBag.DbCtx as AppDatabaseContext;
@@ -76,6 +75,7 @@
 				
 				<td>@item.Name</td>
 				<td>@item.Students.Count students</td>
+				<td>@OwnershipUtils.DoesUserHaveAccess(ViewBag.User, @item)</td>
 				<td>
 				<a href="/TimeTable/@item.Id?date=@DateTime.UtcNow.ToString("yyyy-MM")" class="btn btn-success" role="button">Edit report</a>
 				</td>
