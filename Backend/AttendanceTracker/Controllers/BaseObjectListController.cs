@@ -7,7 +7,14 @@ using System.Net;
 
 namespace AttendanceTracker.Controllers
 {
-    [Route("api/[controller]")]
+	public enum DatabaseAccessResult
+	{
+		NotFound,
+		NotAuthorized,
+		Success
+	}
+
+	[Route("api/[controller]")]
     public abstract class BaseObjectListController<DbType,ApiType> : Controller 
         where DbType : class, IIntDbKey, new()
         where ApiType : class, IIntDbKey, IAPIModelFor<ApiType,DbType>
@@ -70,12 +77,31 @@ namespace AttendanceTracker.Controllers
         [Route(nameof(Create))]
         public async Task<ActionResult<ApiType>> Create([FromBody] ApiType value)
         {
-            var entry = await CreateEntry(DbCtx, value);
-            value.Id = default;
-            DbCtx.Entry(entry).CurrentValues.SetValues(value);
-            await AssignUserId(entry);
-            await DbCtx.SaveChangesAsync();
-            value.Id = entry.Id;
+            using (var transaction = await DbCtx.Database.BeginTransactionAsync())
+            {
+                try 
+                {
+                    var entry = await CreateEntry(DbCtx, value);
+                    value.Id = default;
+                    DbCtx.Entry(entry).CurrentValues.SetValues(value);
+                    await AssignUserId(entry);
+                    
+                    // check if this entry is valid
+                    if(!await UserHasAccess(entry))
+                    {
+                        transaction.Rollback();
+                        return BadRequest();
+                    }
+
+                    await DbCtx.SaveChangesAsync();
+                    value.Id = entry.Id;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
             return value;
         }
 
