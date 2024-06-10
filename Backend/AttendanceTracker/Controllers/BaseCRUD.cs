@@ -7,6 +7,61 @@ using System.Net;
 
 namespace AttendanceTracker.Controllers
 {
+    public class ApiResult
+    {
+		public enum ErrorCodeEnum
+		{
+			Unknown,
+			NotFound,
+			InvalidInput
+		}
+
+		public static ApiResult<T> Success<T>(T result)
+        {
+            return ApiResult<T>.Success(result);
+        }
+
+		public static ApiResult Error(ErrorCodeEnum error, string message)
+		{
+			return ApiResult<object>.Error(error, message);
+		}
+
+        public static ApiResult NotFound()
+        {
+            return Error(ErrorCodeEnum.NotFound, default);
+        }
+	}
+
+    public class ApiResult<T> : ApiResult
+    {
+
+
+        public ErrorCodeEnum? ErrorCode { get; set; }
+        public string? HumanReadableErrorCode { get; set; }
+        public string? ErrorMessage { get; set; }
+        public T? Result { get; set; }
+
+		public ApiResult(ErrorCodeEnum? status, T result)
+		{
+			ErrorCode = status;
+            if(status != null)
+            {
+                HumanReadableErrorCode = status.ToString();
+            }
+			Result = result;
+		}
+
+        public static ApiResult<T> Success(T result)
+        {
+            return new ApiResult<T>(null, result);
+        }
+
+        public static ApiResult<T> Error(ErrorCodeEnum error, string message)
+        {
+            return new ApiResult<T>(error, default) { ErrorMessage = message};
+        }
+    }
+
 	public class DatabaseAccessResult<T>
 	{
 		public enum StatusEnum
@@ -57,51 +112,51 @@ namespace AttendanceTracker.Controllers
 
         [HttpGet]
         [Route(nameof(Read))]
-        public async Task<ActionResult<ApiType>> Read(int id)
+        public async Task<ApiResult> Read(int id)
         {
 			var entry = (await GetEntry(DbCtx, id)).Value;
-			if (entry == null) return NotFound();
-			return Activator.CreateInstance<ApiType>().ConvertToAPI(DbCtx, entry);
+            if (entry == null) return ApiResult.NotFound();
+			return ApiResult.Success(Activator.CreateInstance<ApiType>().ConvertToAPI(DbCtx, entry));
         }
 
         [HttpGet]
         [Route(nameof(ReadAll))]
-        public async Task<ActionResult<List<ApiType>>> ReadAll()
+        public async Task<ApiResult> ReadAll()
         {
             var list = DbCtx.Set<DbType>().ToList();
-            return list.Select(dbEnt => Activator.CreateInstance<ApiType>().ConvertToAPI(DbCtx, dbEnt)).ToList();
+            return ApiResult.Success(list.Select(dbEnt => Activator.CreateInstance<ApiType>().ConvertToAPI(DbCtx, dbEnt)).ToList());
         }
 
         [HttpPost]
         [Route(nameof(Delete))]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ApiResult> Delete(int id)
         {
 			var entry = (await GetEntry(DbCtx, id)).Value;
-			if (entry == null) return NotFound();
+            if (entry == null) return ApiResult.NotFound();
 
 			DbCtx.Remove(entry);
             await DbCtx.SaveChangesAsync();
-            return Ok();
+            return ApiResult.Success(true);
         }
 
         [HttpPost]
         [Route(nameof(Update))]
-        public async Task<ActionResult<ApiType>> Update(int id, [FromBody] ApiType value)
+        public async Task<ApiResult> Update(int id, [FromBody] ApiType value)
         {
             var entry = (await GetEntry(DbCtx, id)).Value;
-            if (entry == null) return NotFound();
+            if (entry == null) return ApiResult.NotFound();
             
             value.Id = entry.Id;
             DbCtx.Entry(entry).CurrentValues.SetValues(value);
             
             await DbCtx.SaveChangesAsync();
 
-            return value;
+            return ApiResult.Success(value);
         }
 
         [HttpPost]
         [Route(nameof(Create))]
-        public async Task<ActionResult<ApiType>> Create([FromBody] ApiType value)
+        public async Task<ApiResult> Create([FromBody] ApiType value)
         {
             using (var transaction = await DbCtx.Database.BeginTransactionAsync())
             {
@@ -116,7 +171,7 @@ namespace AttendanceTracker.Controllers
                     if(!await UserHasAccess(entry))
                     {
                         transaction.Rollback();
-                        return BadRequest();
+                        return ApiResult.Error(ApiResult.ErrorCodeEnum.InvalidInput, "The resulting object violates ownership constraints");
                     }
 
                     transaction.Commit();
@@ -129,17 +184,17 @@ namespace AttendanceTracker.Controllers
                     throw;
                 }
             }
-            return value;
+            return ApiResult.Success(value);
         }
 
-        public static async Task<DbType> CreateEntry(AppDatabaseContext dbCtx, ApiType value)
+        protected static async Task<DbType> CreateEntry(AppDatabaseContext dbCtx, ApiType value)
         {
             var entry = new DbType();
             await dbCtx.AddAsync(entry);
             return entry;
         }
 
-        public async Task<DatabaseAccessResult<DbType>> GetEntry(AppDatabaseContext dbCtx, int id)
+        protected async Task<DatabaseAccessResult<DbType>> GetEntry(AppDatabaseContext dbCtx, int id)
         {
             var entry = await dbCtx.FindAsync<DbType>(id);
             if(entry == null)
@@ -157,13 +212,13 @@ namespace AttendanceTracker.Controllers
             }
         }
 
-		public async Task AssignUserId(DbType entry)
+		protected async Task AssignUserId(DbType entry)
 		{
 			var user = await UserManager.GetUserAsync(User);
 			await AssignUserId(user, entry);
 		}
 
-		public async Task<bool> UserHasAccess(DbType entry)
+		protected async Task<bool> UserHasAccess(DbType entry)
         {
             var user = await UserManager.GetUserAsync(User);
             return UserHasAccess(user, DbCtx, entry);

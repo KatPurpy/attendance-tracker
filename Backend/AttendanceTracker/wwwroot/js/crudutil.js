@@ -62,9 +62,15 @@ async function LoadCrudObj(formname, type, id)
 {
     const request = await fetch(`/api/${type}/Read?` + new URLSearchParams({ id }));
     result = await request.json();
-    for (const key in result) {
-        const qs = document.querySelector('#' + formname + ` input[name="${key}" i]`);
-        qs.value = result[key];
+    console.log(result);
+    if (!result.errorCode) {
+        result = result.result;
+        for (const key in result) {
+            const qs = document.querySelector('#' + formname + ` input[name="${key}" i]`);
+            qs.value = result[key];
+        }
+    } else {
+        console.error(result);
     }
 }
 
