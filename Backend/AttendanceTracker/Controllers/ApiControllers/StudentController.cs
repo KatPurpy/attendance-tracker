@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 namespace AttendanceTracker.Controllers.ApiControllers
 {
     [Authorize(Roles = "Teacher")]
-    public class StudentController : BaseObjectListController<Student, APIStudent>
+    public class StudentController : BaseCRUD<Student, APIStudent>
     {
         public StudentController(AppDatabaseContext context, UserManager<IdentityUser> usermanager) : base(context, usermanager)
         {

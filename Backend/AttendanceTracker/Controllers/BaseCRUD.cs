@@ -7,22 +7,49 @@ using System.Net;
 
 namespace AttendanceTracker.Controllers
 {
-	public enum DatabaseAccessResult
+	public class DatabaseAccessResult<T>
 	{
-		NotFound,
-		NotAuthorized,
-		Success
+		public enum StatusEnum
+        {
+			NotFound,
+			NotAuthorized,
+			Success
+		}
+
+        public StatusEnum Status;
+        public T? Value;
+
+		public DatabaseAccessResult(DatabaseAccessResult<T>.StatusEnum status, T? value)
+		{
+			Status = status;
+			Value = value;
+		}
+
+		public static DatabaseAccessResult<T> NotFound()
+        {
+            return new(StatusEnum.NotFound, default);
+        }
+		
+        public static DatabaseAccessResult<T> NotAuthorized()
+		{
+			return new(StatusEnum.NotAuthorized, default);
+		}
+
+        public static DatabaseAccessResult<T> Success(T  value)
+        {
+            return new(StatusEnum.Success, value);
+        }
 	}
 
-	[Route("api/[controller]")]
-    public abstract class BaseObjectListController<DbType,ApiType> : Controller 
+    [Route("api/[controller]")]
+    public abstract class BaseCRUD<DbType,ApiType> : Controller 
         where DbType : class, IIntDbKey, new()
         where ApiType : class, IIntDbKey, IAPIModelFor<ApiType,DbType>
     {
         protected readonly AppDatabaseContext DbCtx;
         protected readonly UserManager<IdentityUser> UserManager;
 
-        public BaseObjectListController(AppDatabaseContext dbCtx, UserManager<IdentityUser> usermanager)
+        public BaseCRUD(AppDatabaseContext dbCtx, UserManager<IdentityUser> usermanager)
         {
             DbCtx = dbCtx;
             UserManager = usermanager;
@@ -32,9 +59,8 @@ namespace AttendanceTracker.Controllers
         [Route(nameof(Read))]
         public async Task<ActionResult<ApiType>> Read(int id)
         {
-            var entry = await GetEntry(DbCtx,id);
-            if (entry == null) return StatusCode((int)HttpStatusCode.NoContent);
-			if (!await UserHasAccess(entry)) return Forbid();
+			var entry = (await GetEntry(DbCtx, id)).Value;
+			if (entry == null) return NotFound();
 			return Activator.CreateInstance<ApiType>().ConvertToAPI(DbCtx, entry);
         }
 
@@ -50,9 +76,9 @@ namespace AttendanceTracker.Controllers
         [Route(nameof(Delete))]
         public async Task<ActionResult> Delete(int id)
         {
-            var entry = await GetEntry(DbCtx, id);
-            if (entry == null) return StatusCode((int)HttpStatusCode.NoContent);
-			if (!await UserHasAccess(entry)) return Forbid();
+			var entry = (await GetEntry(DbCtx, id)).Value;
+			if (entry == null) return NotFound();
+
 			DbCtx.Remove(entry);
             await DbCtx.SaveChangesAsync();
             return Ok();
@@ -62,9 +88,9 @@ namespace AttendanceTracker.Controllers
         [Route(nameof(Update))]
         public async Task<ActionResult<ApiType>> Update(int id, [FromBody] ApiType value)
         {
-            var entry = await GetEntry(DbCtx, id);
-            if (entry == null) return StatusCode((int)HttpStatusCode.NoContent);
-            if (!await UserHasAccess(entry)) return Forbid();
+            var entry = (await GetEntry(DbCtx, id)).Value;
+            if (entry == null) return NotFound();
+            
             value.Id = entry.Id;
             DbCtx.Entry(entry).CurrentValues.SetValues(value);
             
@@ -93,6 +119,7 @@ namespace AttendanceTracker.Controllers
                         return BadRequest();
                     }
 
+                    transaction.Commit();
                     await DbCtx.SaveChangesAsync();
                     value.Id = entry.Id;
                 }
@@ -112,9 +139,22 @@ namespace AttendanceTracker.Controllers
             return entry;
         }
 
-        public static async Task<DbType?> GetEntry(AppDatabaseContext dbCtx, int id)
+        public async Task<DatabaseAccessResult<DbType>> GetEntry(AppDatabaseContext dbCtx, int id)
         {
-            return await dbCtx.FindAsync<DbType>(id);
+            var entry = await dbCtx.FindAsync<DbType>(id);
+            if(entry == null)
+            {
+                return DatabaseAccessResult<DbType>.NotFound();
+            }
+
+            if(await UserHasAccess(entry))
+            {
+                return DatabaseAccessResult<DbType>.Success(entry);
+            }
+            else
+            {
+                return DatabaseAccessResult<DbType>.NotAuthorized();
+            }
         }
 
 		public async Task AssignUserId(DbType entry)

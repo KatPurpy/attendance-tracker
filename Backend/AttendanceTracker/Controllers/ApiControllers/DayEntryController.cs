@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 namespace AttendanceTracker.Controllers.ApiControllers
 {
     [Authorize(Roles = "Teacher")]
-    public class DayEntryController : BaseObjectListController<Models.DB.DayEntry, Models.API.APIDayEntry>
+    public class DayEntryController : BaseCRUD<Models.DB.DayEntry, Models.API.APIDayEntry>
     {
         public DayEntryController(AppDatabaseContext context, UserManager<IdentityUser> usermanager) : base(context, usermanager)
         {
@@ -53,7 +53,7 @@ namespace AttendanceTracker.Controllers.ApiControllers
         public async Task<IActionResult> Edit(int studentID, DateTime day, string value)
         {
             var student = await DbCtx.Students.FindAsync(studentID);
-            if(student == null) { return NotFound(); }
+            if(student == null) { return NoContent(); }
             
             // quantize day datetime to days
             day = new DateTime(day.Year,day.Month,day.Day,0,0,0,DateTimeKind.Utc);
